@@ -10,7 +10,6 @@ if (url.indexOf(setfree) != -1) {
    obj.data.random = "i1K4Ooqy6/9202tbGnNB2MxdXFaJ3j3aENe/gxZ+QBw=";
    for (var i = 0; i < obj.data.pictureList.length; i++) {
        obj.data.pictureList[i].isFree = true;
-       obj.data.pictureList[i].key = "ZmbNGN8q9m17U+x66T+O7P2GxHTKosPR5xVRagFAkZY=";
    }
    body = JSON.stringify(obj);
 }
@@ -18,5 +17,10 @@ if (url.indexOf(userinfo) != -1) {
    obj.data.level = 5;
    obj.data.expireTime = 4070965662;
    body = JSON.stringify(obj);
+}
+if (url.indexOf("/update") != -1) {
+   obj.data.level = 5;
+   obj.data.expireTime = 4070965662;
+   
 }
 $done({body});
