@@ -7,8 +7,8 @@ const setfree = '/special';
 
 if (url.indexOf(setfree) != -1) {
    for (var i = 0; i < obj.data.length; i++) {
-       obj.data[i].isFree = true;
-       obj.data[i].random = "Kqp5/Z35ga5WBeNcLue+dBwZW4ZWRoDFMAqqU48d06Y=";
+       obj.data.pictureList[i].isFree = true;
+       obj.data.pictureList[i].random = "Kqp5/Z35ga5WBeNcLue+dBwZW4ZWRoDFMAqqU48d06Y=";
    }
    body = JSON.stringify(obj);
 }
