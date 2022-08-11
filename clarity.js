@@ -21,6 +21,7 @@ if (url.indexOf(userinfo) != -1) {
 if (url.indexOf("/update") != -1) {
    obj.data.level = 5;
    obj.data.expireTime = 4070965662;
+   body = JSON.stringify(obj);
    
 }
 $done({body});
