@@ -6,7 +6,7 @@ const userinfo = '/userInfo';
 const setfree = '/special';
 
 if (url.indexOf(setfree) != -1) {
-   for (var i = 0; i < obj.data.length; i++) {
+   for (var i = 0; i < obj.data.pictureList.length; i++) {
        obj.data.pictureList[i].isFree = true;
        obj.data.pictureList[i].random = "Kqp5/Z35ga5WBeNcLue+dBwZW4ZWRoDFMAqqU48d06Y=";
    }
