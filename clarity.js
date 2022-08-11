@@ -7,9 +7,9 @@ const setfree = '/special';
 
 if (url.indexOf(setfree) != -1) {
    obj.data.isFree = true;
-   obj.data.random = null;
    for (var i = 0; i < obj.data.pictureList.length; i++) {
        obj.data.pictureList[i].isFree = true;
+       obj.data.pictureList[i].state = 0;
    }
    body = JSON.stringify(obj);
 }
