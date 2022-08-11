@@ -7,9 +7,10 @@ const setfree = '/special';
 
 if (url.indexOf(setfree) != -1) {
    obj.data.isFree = true;
+   obj.data.isFree = "i1K4Ooqy6/9202tbGnNB2MxdXFaJ3j3aENe/gxZ+QBw=";
    for (var i = 0; i < obj.data.pictureList.length; i++) {
        obj.data.pictureList[i].isFree = true;
-       obj.data.pictureList[i].state = 0;
+       obj.data.pictureList[i].key = "ZmbNGN8q9m17U+x66T+O7P2GxHTKosPR5xVRagFAkZY=";
    }
    body = JSON.stringify(obj);
 }
