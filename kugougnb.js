@@ -15,7 +15,7 @@ obj.data.svip_level = 6;};
 
 if(url.indexOf("album_songlist")>-1){
 for(var i = 0; i < obj.data.total; i++){
-obj.data.songs[i].deprecated.pay_type = 1;
+obj.data.songs[i].deprecated.pay_type = 0;
 obj.data.songs[i].deprecated.price = 0;
 
 };
