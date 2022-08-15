@@ -21,4 +21,9 @@ obj.data.songs[i].deprecated.price = 0;
 };
 };
 
+if(url.indexOf("chgurl_arr")>-1){
+obj.hash_offset.end_ms = 6000000;
+obj.hash_offset.end_byte = obj.fileSize;
+};
+
 $done({body : JSON.stringify(obj)});
