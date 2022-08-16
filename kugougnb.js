@@ -22,26 +22,26 @@ obj.data.songs[i].deprecated.price = 0;
 };
 
 if(url.indexOf("chgurl_arr")>-1){
-let json = {
-  "status" : 1,
-  "timeLength" : obj.timeLength,
-  "fileName" : obj.fileName,
-  "trans_param" : {
-    "display" : 32,
-    "classmap" : {
-      "attr0" : 234885128
+var newObj = {
+  status : 1,
+  timeLength : obj.timeLength,
+  fileName : obj.fileName,
+  trans_param : {
+    display : 32,
+    classmap : {
+      attr0 : 234885128
     },
-    "display_rate" : 1
+    display_rate : 1
   },
-  "bitRate" : 128000,
-  "fileHead" : 100,
-  "extName" : "mp3",
-  "q" : 0,
-  "fileSize" : obj.fileSize,
-  "url" : obj.url
+  bitRate : 128000,
+  fileHead : 100,
+  extName : "mp3",
+  q: 0,
+  fileSize : obj.fileSize,
+  url : obj.url
 }
-$done({body : json});
- return
+
+obj = newObj;
 
 };
 
