@@ -5,7 +5,7 @@ var match_0 =
   url.indexOf("batch_union_vipinfo") > -1 ||
   url.indexOf("batch_union_vipinfo") > -1;
 var match_1 = url.indexOf("get_my_info") > -1;
-var match_2 = url.indexOf("album_songlist") > -1;
+var match_2 = url.indexOf("kmr/v1/album_songlist") > -1;
 var match_3 = url.indexOf("chgurl_arr") > -1;
 
 if (match_0) {
@@ -22,8 +22,110 @@ if (match_1) {
 
 if (match_2) {
   for (var i = 0; i < obj.data.total; i++) {
-    obj.data.songs[i].deprecated.pay_type = 3;
-    obj.data.songs[i].deprecated.price = 0;
+    obj.data.songs[i] = {
+      extend: {
+        has_obbligato: 1,
+        sort: 1,
+      },
+      audio_info: {
+        hash_high: "",
+        filesize_high: 0,
+        hash_320: "17A0CCC8F903C7915E445EFFD33D613E",
+        bitrate: 128,
+        duration_128: 29857,
+        duration_high: 29813,
+        filesize: 478460,
+        duration: 29857,
+        hash_flac: "D38D22FEA08188D2CE978767196119D2",
+        hash_128: "9C3BE165FB06EB04DA7A077B4D7FFD7B",
+        filesize_320: 1195678,
+        bitrate_super: 0,
+        filesize_128: 478460,
+        duration_flac: 29813,
+        filesize_flac: 2506570,
+        hash_super: "",
+        extname: "mp3",
+        hash: "9C3BE165FB06EB04DA7A077B4D7FFD7B",
+        bitrate_high: 1374,
+        duration_super: 0,
+        extname_super: "",
+        filesize_super: 0,
+        duration_320: 29857,
+      },
+      base: {
+        author_name: "周杰伦",
+        is_publish: 1,
+        audio_name: "Intro",
+        album_id: 58849245,
+        audio_id: 176319740,
+        album_audio_id: 424968832,
+      },
+      album_info: {
+        album_name: "最伟大的作品",
+      },
+      trans_param: {
+        hash_offset: {
+          end_ms: 60000,
+          clip_hash: "0B4E0C4249685A93945892C387256992",
+          file_type: 0,
+          end_byte: 960121,
+          offset_hash: "BC2FB78255EF9F70C5E84632CB6176AB",
+          start_byte: 0,
+          start_ms: 0,
+        },
+        hash_multitrack: "2ae0687b84d1550c40ee8aab57b217a9",
+        ownercount: 0,
+        classmap: {
+          attr0: 234885128,
+        },
+        musicpack_advance: 1,
+        display: 32,
+        cid: 32127346,
+        appid_block: "3124",
+        cpy_attr0: 0,
+        cpy_level: 1,
+        cpy_grade: 5,
+        display_rate: 1,
+        pay_block_tpl: 1,
+        sort: 1,
+      },
+      extra: {
+        remark: "",
+      },
+      copyright: {
+        privilege_128: 10,
+        privilege: 10,
+        sale_mode_128_download: 4,
+        album_sale_url:
+          "https://ep.kugou.com/html/mobile_commonchargeV3/index_442363.html?is_go=1&hreffrom=37",
+        privilege_320: 10,
+        sale_mode_download: 4,
+        privilege_flac: 10,
+        sale_mode_320_download: 4,
+        sale_mode_flac_download: 4,
+        viponly_tag: 0,
+      },
+      musical: {},
+      deprecated: {
+        cpy_grade: 5,
+        video_hash: "",
+        pay_block_tpl: 1,
+        old_cpy: 0,
+        display: 32,
+        pay_type: 3,
+        price: 0,
+        pkg_price: 1,
+        type: "audio",
+        display_rate: 1,
+        cid: 219196643,
+      },
+      authors: [
+        {
+          author_name: "周杰伦",
+          author_id: 3520,
+        },
+      ],
+    };
   }
 }
 
