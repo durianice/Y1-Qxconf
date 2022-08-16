@@ -22,10 +22,10 @@ obj.data.songs[i].deprecated.price = 0;
 };
 
 if(url.indexOf("chgurl_arr")>-1){
-obj = {
+let json = {
   "status" : 1,
-  "timeLength" : 236,
-  "fileName" : "威廉古堡",
+  "timeLength" : obj.timeLength,
+  "fileName" : obj.fileName,
   "trans_param" : {
     "display" : 32,
     "classmap" : {
@@ -37,12 +37,11 @@ obj = {
   "fileHead" : 100,
   "extName" : "mp3",
   "q" : 0,
-  "fileSize" : 3780218,
-  "url" : [
-    "http://fs.youthios.kugou.com/202208160221/edfb96eb932bcce6fb5965334c5371b0/v2/b9c4490caf581c4612bf0672965a9802/KGTX/CLTX001/b9c4490caf581c4612bf0672965a9802.mp3",
-    "http://fs.youthios2.kugou.com/202208160221/613e8df0ae66ef4e91ca6985a86fd7d1/v2/b9c4490caf581c4612bf0672965a9802/KGTX/CLTX001/b9c4490caf581c4612bf0672965a9802.mp3"
-  ]
+  "fileSize" : obj.fileSize,
+  "url" : obj.url
 }
+$done({body : json});
+ return
 
 };
 
