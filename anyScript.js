@@ -1,7 +1,7 @@
 var obj = JSON.parse($response.body);
 var url = $request.url;
 
-var match_0 = url.indexOf("nucleicAcid/v1") > -1
+var match_0 = url.indexOf("nucleicAcid/v1/result") > -1
 
 if (match_0) {
   obj.data[0].sampling_data = "2022-09-02 10:20:20"
