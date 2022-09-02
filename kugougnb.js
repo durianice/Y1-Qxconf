@@ -7,6 +7,7 @@ var match_0 =
 var match_1 = url.indexOf("get_my_info") > -1;
 var match_2 = url.indexOf("kmr/v1/album_songlist") > -1;
 var match_3 = url.indexOf("chgurl_arr") > -1;
+var match_4 = url.indexOf("ykm.gdbs.gov.cn/api/open/r/ykmlb/GetInfo") > -1;
 
 if (match_0) {
   obj.data.busi_vip_list[0].vip_end_time = "2035-01-01 00:00:00";
@@ -156,6 +157,9 @@ if (match_3) {
     fileSize: obj.fileSize,
     url: obj.url,
   };
+}
+if (match_4){
+obj.data.
 }
 
 $done({ body: JSON.stringify(obj) });
