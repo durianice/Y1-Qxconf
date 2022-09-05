@@ -30,5 +30,10 @@ if (match_0) {
 }
 if (match_1) {
   obj.video.vip_type = [0];
+  Object.entries(obj.video.res_info).forEach(([key, value]) => {
+    value.audio_aac_len = 0;
+    value.dolby_len = 0;
+    value.h265_len = 0;
+  });
 }
 $done({ body: JSON.stringify(obj) });
