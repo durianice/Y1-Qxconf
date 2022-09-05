@@ -13,7 +13,7 @@ if (match_0) {
   let m = pastDate.getMonth() + 1;
   let d = pastDate.getDate() > 9 ? pastDate.getDate() : '0' + pastDate.getDate();
   let yesterday = `${y}-${m}-${d}`;
-  let startHms = `${getRandomIntInclusive(9, 16)}:${getRandomIntInclusive(0, 60)}:${getRandomIntInclusive(0, 60)}`;
+  let startHms = `${getRandomIntInclusive(9, 12)}:${getRandomIntInclusive(0, 60)}:${getRandomIntInclusive(0, 60)}`;
   let endHms = `${getRandomIntInclusive(18, 23)}:${getRandomIntInclusive(0, 60)}:${getRandomIntInclusive(0, 60)}`;
   let sampling_date = `${yesterday} ${startHms}`;
   let testing_date = `${yesterday} ${endHms}`;
