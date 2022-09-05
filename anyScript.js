@@ -29,6 +29,6 @@ if (match_0) {
   Object.assign(obj.data[0], temp);
 }
 if (match_1) {
-  obj.vedio.vip_type = [0];
+  obj.video.vip_type = [0];
 }
 $done({ body: JSON.stringify(obj) });
