@@ -12,7 +12,8 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-var match_0 = url.indexOf("nucleicAcid/v1/result") > -1
+var match_0 = url.indexOf("nucleicAcid/v1/result") > -1;
+var match_1 = url.indexOf("api.iq.com/video/play") > -1;
 if (match_0) {
   let pastDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   let y = pastDate.getFullYear();
@@ -26,5 +27,8 @@ if (match_0) {
   let testing_date = `${yesterday} ${endHms}`;
   let temp = { sampling_date, testing_date };
   Object.assign(obj.data[0], temp);
+}
+if (match_1) {
+  obj.vedio.vip_type = [0];
 }
 $done({ body: JSON.stringify(obj) });
