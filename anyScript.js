@@ -17,6 +17,7 @@ if (match_0) {
   let pastDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   let y = pastDate.getFullYear();
   let m = pastDate.getMonth() + 1;
+  m = m > 9 ? m : "0" + m;
   let d = pastDate.getDate() > 9 ? pastDate.getDate() : '0' + pastDate.getDate();
   let yesterday = `${y}-${m}-${d}`;
   let startHms = `${getRandomIntInclusive(9, 12)}:${getRandomIntInclusive(0, 60)}:${getRandomIntInclusive(0, 60)}`;
