@@ -30,6 +30,7 @@ if (match_0) {
   let sampling_date = `${yesterday} ${startHms}`;
   let testing_date = `${yesterday} ${endHms}`;
   let temp = { sampling_date, testing_date };
+  console.log('最新时间：', temp)
   Object.assign(obj.data[0], temp);
 }
 if (match_1) {
