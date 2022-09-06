@@ -12,8 +12,6 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 function presetZero(num) {
-  if (typeof num !== 'string' || typeof num !== 'number') return '0';
-  num = Number(num);
   return num > 9 ? num : '0' + num;
 }
 
@@ -30,7 +28,6 @@ if (match_0) {
   let sampling_date = `${yesterday} ${startHms}`;
   let testing_date = `${yesterday} ${endHms}`;
   let temp = { sampling_date, testing_date };
-  $notify('', '最新时间', sampling_date);
   Object.assign(obj.data[0], temp);
 }
 if (match_1) {
