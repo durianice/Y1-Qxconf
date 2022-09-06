@@ -20,11 +20,11 @@ var match_1 = url.indexOf("api.iq.com/video/play") > -1;
 if (match_0) {
   let pastDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   let y = pastDate.getFullYear();
-  let m = presetZero(pastDate.getMonth() + 1);
-  let d = presetZero(pastDate.getDate());
+  let m = pastDate.getMonth() + 1;
+  let d = pastDate.getDate();
   let yesterday = `${y}-${m}-${d}`;
-  let startHms = `${presetZero(getRandomIntInclusive(9, 12))}:${presetZero(getRandomIntInclusive(0, 60))}:${presetZero(getRandomIntInclusive(0, 60))}`;
-  let endHms = `${presetZero(getRandomIntInclusive(18, 23))}:${presetZero(getRandomIntInclusive(0, 60))}:${presetZero(getRandomIntInclusive(0, 60))}`;
+  let startHms = `${getRandomIntInclusive(9, 12)}:${getRandomIntInclusive(0, 60)}:${getRandomIntInclusive(0, 60)}`;
+  let endHms = `${getRandomIntInclusive(18, 23)}:${getRandomIntInclusive(0, 60)}:${getRandomIntInclusive(0, 60)}`;
   let sampling_date = `${yesterday} ${startHms}`;
   let testing_date = `${yesterday} ${endHms}`;
   let temp = { sampling_date, testing_date };
