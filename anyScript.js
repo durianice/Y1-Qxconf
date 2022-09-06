@@ -16,8 +16,6 @@ function presetZero(num) {
 }
 
 var match_0 = url.indexOf("nucleicAcid/v1/result") > -1;
-var match_1 = url.indexOf("api.iq.com/video/play") > -1;
-var match_2 = url.indexOf("qrcCode/v1/statusRecordByCodeId") > -1;
 if (match_0) {
   let pastDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   let y = pastDate.getFullYear();
@@ -30,17 +28,5 @@ if (match_0) {
   let testing_date = `${yesterday} ${endHms}`;
   let temp = { sampling_date, testing_date };
   Object.assign(obj.data[0], temp);
-}
-if (match_2) {
-  obj.data.yssHealthyStatus.isRed = true;
-  obj.data.yssHealthyStatus.redReason = '哈哈';
-}
-if (match_1) {
-  obj.video.vip_type = [0];
-  Object.entries(obj.video.res_info).forEach(([key, value]) => {
-    value.audio_aac_len = 0;
-    value.dolby_len = 0;
-    value.h265_len = 0;
-  });
 }
 $done({ body: JSON.stringify(obj) });
