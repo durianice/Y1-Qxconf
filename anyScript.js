@@ -42,7 +42,7 @@ if (match_1) {
   obj = {
     code: 0,
     subcode: 0,
-    data: timestamp,
+    data: 1663554600000,
     msg: 'success'
   };
 }
