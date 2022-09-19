@@ -125,12 +125,15 @@ function getRedBag(couponReferId) {
     }).then(resp => {
       const obj = resp.body;
       if (obj.msg === '已领取') {
-        $.logger.info(`已领取红包${obj.priceLimit}-${obj.couponValue}`);
+        const msg = `已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
+        $.logger.info(msg);
+        $.notification.post(msg);
         resolve(true);
       }
       else {
         const msg = `领取红包失败\n${JSON.stringify(obj)}`;
         $.logger.warning(msg);
+        $.notification.post(msg);
         reject(false)
       }
     }).catch(err => {
