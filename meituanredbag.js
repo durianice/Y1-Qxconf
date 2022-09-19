@@ -87,8 +87,7 @@ function getRedBagId() {
     $.http.get({
       url: appjsUrl,
     }).then(res => {
-      $.logger.info(typeof res.body);
-      const idStrList = res.body.toString().match(/redBagList1:{redbagId1:"([\s\S]*?)"/g);
+      const idStrList = res.body.match(/redBagList1:{redbagId1:"([\s\S]*?)"/g);
       let temp = idStrList.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o);
       let idList = Array.from(new Set(temp));
       const amId = idList[0];
@@ -106,7 +105,8 @@ function getRedBagId() {
 }
 
 // 领取红包
-function getRedBag(couponReferId) {
+function getRedBag(options) {
+  const { currentUserId, couponReferId } = options;
   return new Promise((resolve, reject) => {
     $.http.post({
       url: `https://promotion.waimai.meituan.com/lottery/limitcouponcomponent/fetchcoupon?couponReferId=${couponReferId}&actualLng=113.37310028076172&actualLat=23.12600326538086&geoType=2&gdPageId=379391&utmSource=70200&utmCampaign=wmsq-51037&instanceId=16619982800580.30892480633143027`,
@@ -121,25 +121,22 @@ function getRedBag(couponReferId) {
         'Referer' : `https://market.waimai.meituan.com/`,
         'Accept-Language' : `zh-CN,zh-Hans;q=0.9`
       },
-      body: bodyData
+      // body: bodyData
     }).then(resp => {
       const obj = resp.body;
       if (obj.msg === '已领取') {
-        const msg = `已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
+        const msg = `用户${currentUserId}已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
         $.logger.info(msg);
-        $.notification.post(msg);
-        resolve(true);
-      }
-      else {
-        const msg = `领取红包失败\n${JSON.stringify(obj)}`;
+        resolve(msg);
+      } else {
+        const msg = `用户${currentUserId}领取红包失败\n${JSON.stringify(obj)}`;
         $.logger.warning(msg);
-        $.notification.post(msg);
-        reject(false)
+        reject(msg)
       }
     }).catch(err => {
-      const msg = `领取红包异常\n${err}`;
+      const msg = `用户${currentUserId}领取红包异常\n${err}`;
       $.logger.error(msg);
-      reject(false)
+      reject(msg)
     })
   })
 }
@@ -155,7 +152,7 @@ function getRedBag(couponReferId) {
     const isAm = new Date().getHours();
     const redBagId = isAm < 12 ? $.data.read(redBagKeyOfAm, "") : $.data.read(redBagKeyOfPm, "");
     if (!redBagId) {
-      const msg = `没有读取到需要秒杀的红包ID!`;
+      const msg = `没有读取到红包ID!`;
       $.logger.warning(msg);
       $.notification.post(msg);
       return;
@@ -165,24 +162,29 @@ function getRedBag(couponReferId) {
       const msg = `没有读取到需要执行的Cookies，请先打开${pageUrl}获取!`;
       $.logger.warning(msg);
       $.notification.post(msg);
+      return;
     }
-    else {
-      $.logger.info(`共${allSessions.length}个Cookies需要执行`);
-      for (let [index, session] of allSessions.entries()) {
-        $.logger.info(`正在执行第 ${index + 1} 个Cookie的任务`);
-        let content = "";
-        currentUserId = session;
-        currentCookies = $.data.read(sankuaiCookieKey, "", session);
-        $.logger.info(`开始抢红包, 红包id: ${redBagId}`);
-        getRedBag(redBagId);
-        //$.utils.retry(getRedBag, 3, 500)(redBagId).then(() => {
-        // $.logger.info("领取成功");
-       // }).catch(() => $.logger.info("领取失败"));
-      //  $.notification.post(`${scriptName} - ${currentUserId}`, "", content);
-       // $.logger.info(`第 ${index + 1} 个Cookie任务执行完毕`);
-      }
-      await getRedBag(redBagId);
+    $.logger.info(`所有红包ID: ${redBagId}`);
+    $.logger.info(`共${allSessions.length}个Cookies需要执行`);
+    let tasks = [];
+    for (let [index, session] of allSessions.entries()) {
+      $.logger.info(`正在执行第 ${index + 1} 个Cookie的任务`);
+      currentUserId = session;
+      currentCookies = $.data.read(sankuaiCookieKey, "", session);
+      const options = { redBagId, currentUserId };
+      tasks.push($.utils.retry(getRedBag, 3, 500)(options));
     }
+    await Promise.all(tasks).then(res => {
+      const content = res.join('\n');
+      $.logger.info(`任务执行完毕`);
+      $.notification.post(`${scriptName}`, "", content);
+    }).catch(err => {
+      const content = res.join('\n');
+      $.logger.info(`任务执行异常`);
+      $.logger.error(err);
+      $.notification.post(`${scriptName}`, "任务执行异常", err);
+    });
+    
   }
   $.done();
 })();
