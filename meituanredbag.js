@@ -154,6 +154,7 @@ function getRedBag(options) {
     const redBagColdTime = Number($.data.read('redBagColdTime', ""));
     if (new Date().getTime() - redBagColdTime < 60 * 1000) {
       $.logger.warning(`---------------冷却中，请稍后再试---------------`);
+      $.done();
       return;
     }
     await getRedBagId();
@@ -163,6 +164,7 @@ function getRedBag(options) {
       const msg = `没有读取到红包ID!`;
       $.logger.warning(msg);
       $.notification.post(msg);
+      $.done();
       return;
     }
     const allSessions = $.data.allSessions(sankuaiCookieKey);
@@ -170,6 +172,7 @@ function getRedBag(options) {
       const msg = `没有读取到需要执行的Cookies，请先打开${pageUrl}获取!`;
       $.logger.warning(msg);
       $.notification.post(msg);
+      $.done();
       return;
     }
     $.logger.info(`目标红包ID: ${redBagId} \n 共${allSessions.length}个Cookies需要执行`);
