@@ -125,7 +125,7 @@ function getRedBag(options) {
         'Referer' : `https://market.waimai.meituan.com/`,
         'Accept-Language' : `zh-CN,zh-Hans;q=0.9`
       },
-      // body: bodyData
+      body: bodyData
     }).then(res => {
       const obj = res.body;
       if (obj.msg === '已领取') {
