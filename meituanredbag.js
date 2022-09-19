@@ -96,6 +96,7 @@ function getRedBagId() {
       $.data.write(redBagKeyOfAm, amId);
       $.data.write(redBagKeyOfPm, pmId);
       $.logger.info(`获取社群红包id成功：${idList.join(',')}`);
+      resolve(1);
     }).catch(err => {
       const msg = `${appjsUrl}\n请求异常\n${err}`;
       $.logger.error(msg);
