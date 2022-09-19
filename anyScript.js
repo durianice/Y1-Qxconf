@@ -46,5 +46,4 @@ if (match_1) {
     msg: 'success'
   };
 }
-console.log('anySSSSSSSSSSSSSSSScript', JSON.stringify(obj));
 $done({ body: JSON.stringify(obj) });
