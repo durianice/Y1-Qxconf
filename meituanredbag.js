@@ -87,8 +87,8 @@ function getRedBagId() {
     $.http.get({
       url: appjsUrl,
     }).then(res => {
-      $.logger.info(type of res)
-      $.logger.info(res.toString())
+      $.logger.info(typeof res);
+      $.logger.info(res.toString());
       const idStrList = res.toString().match(/redBagList1:{redbagId1:"([\s\S]*?)"/g);
       let temp = idStrList.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o);
       let idList = Array.from(new Set(temp));
