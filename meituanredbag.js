@@ -1,58 +1,28 @@
-const scriptName = '饿了么';
-const getCoordinateRegex1 = /^https?:\/\/air\.tb\.ele\.me\/app\/conch-page\/svip-home-tasklist-new\/home\?.*longitude=([^&]*).*latitude=([^&]*)/;
-const getCoordinateRegex2 = /^https?:\/\/tb\.ele\.me\/wow\/alsc\/mod\/.*longitude=([^&]*).*latitude=([^&]*)/;
-const getCoordinateRegex3 = /^https?:\/\/h5\.ele\.me\/restapi\/biz\.svip_scene\/svip\/engine\/queryTrafficSupply\?.*longitude=([^&]*).*latitude=([^&]*)/;
-const getCookiesRegex = /^https?:\/\/air\.tb\.ele\.me\/app\/conch-page\/svip-foodie-card\/home/;
-const elemeCookieKey = 'eleme_cookies';
-const elemeCoordinateKey = 'eleme_coordinate';
-const elemeMissionKey = 'eleme_mission';
-const elemeSyncQinglongKey = 'eleme_sync_qinglong';
-const elemeTaskKey = "eleme_task_keywords";
+
+const pageUrl = `https://market.waimai.meituan.com/gd/single.html?el_biz=waimai&el_page=gundam.loader&activity_id=220542&tenant=gundam&gundam_id=3axN8G`;
+const scriptName = '美团外卖红包';
+const getCookiesRegex = /^https?:\/\/market\.waimai\.meituan\.com\/gd\/single\.html.*/;
+const templateUrl = `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&activity_id=220542&tenant=gundam&gundam_id=3axN8G`;
+const appjsUrl = `https://s3plus.meituan.net/v1/mss_91f3b645703642ce914d9ce3610eaf4c/gundampage/app.1662695184234ab1dc534708743bde6f04219fcad192a.js`
+const sankuaiCookieKey = 'sankuai_cookies';
+const sankuaiMissionKey = 'sankuai_mission';
+const sankuaiSyncQinglongKey = 'sankuai_sync_qinglong';
 let currentUserId = "";
 let currentCookies = "";
 let currentCoordinate = null;
 
+const redBagKeyOfAm = '25-12_am';
+const redBagKeyOfPm = '25-12_pm';
+
 const $ = MagicJS(scriptName, "INFO");
+
+const bodyData = `{"cType":"wm_wxapp","fpPlatform":13,"wxOpenId":"oOpUI0aQ31VXW_N05sJFJJBSNbik","appVersion":"","mtFingerprint":"H5dfp_1.5.1_tttt_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"}`;
 
 function getUserId(cookies) {
   if (!!cookies) {
-    let userId = /USERID=(\d*)/.exec(cookies)[1];
+    let userId = /userId=(\d*)/.exec(cookies)[1];
     $.logger.info(`当前UserId：${userId}`);
     return userId;
-  }
-}
-
-async function getCoordinate() {
-  try {
-    $.logger.debug(`当前获取的header\n${$.request.headers}`);
-    currentUserId = getUserId($.request.headers.Cookie);
-    let hisCoordinate = $.data.read(elemeCoordinateKey, "", currentUserId);
-    arr = $.request.url.match(getCoordinateRegex1);
-    if (arr && arr.length < 2) {
-      arr = $.request.url.match(getCoordinateRegex2);
-    }
-    if (arr && arr.length < 2) {
-      arr = $.request.url.match(getCoordinateRegex3);
-    }
-    const longitude = arr[1];
-    const latitude = arr[2];
-    if (!hisCoordinate || (!!hisCoordinate && (hisCoordinate.longitude !== longitude || hisCoordinate.latitude !== latitude))) {
-      $.data.write(elemeCoordinateKey, { longitude, latitude }, currentUserId);
-      $.notification.post("更新坐标成功");
-    }
-    const syncQinglong = $.data.read(elemeSyncQinglongKey, false);
-    if (syncQinglong === true) {
-      // 获取青龙面板存储的坐标
-      hisCoordinate = await $.qinglong.read(elemeCoordinateKey, "", currentUserId);
-      if (!hisCoordinate || (!!hisCoordinate && (hisCoordinate.longitude !== longitude || hisCoordinate.latitude !== latitude))) {
-        await $.qinglong.write(elemeCoordinateKey, { longitude, latitude }, currentUserId);
-        $.notification.post("同步坐标至青龙面板成功");
-      }
-    }
-  }
-  catch (err) {
-    $.notify('获取坐标出现异常，请查阅日志。');
-    $.logError(`获取坐标出现执行异常，异常信息：${err}`);
   }
 }
 
@@ -61,35 +31,36 @@ async function getCookies() {
     const cookie = $.request.headers.Cookie;
     $.logger.info(`本次运行获取的新Cookies\n${cookie}`);
     currentUserId = getUserId(cookie);
-    const compareCookie2 = !!cookie ? /cookie2=([a-zA-Z0-9]*)/.exec(cookie)[1] : null;
+    const regStr = /_lxsdk_s=([a-zA-Z0-9\-%]*)/
+    const compareCookie = !!cookie ? regStr.exec(cookie)[1] : null;
     // 获取存储池中的旧Cookie
-    let hisCookie = $.data.read(elemeCookieKey, "", currentUserId);
+    let hisCookie = $.data.read(sankuaiCookieKey, "", currentUserId);
     $.logger.info(`存储池中旧的Cookies\n${hisCookie}`);
     if (!!cookie) {
       if (!hisCookie) {
-        $.data.write(elemeCookieKey, cookie, currentUserId);
+        $.data.write(sankuaiCookieKey, cookie, currentUserId);
         $.notification.post("Cookie获取成功！");
       }
       else {
-        const compareHisCookie2 = !!hisCookie ? /cookie2=([a-zA-Z0-9]*)/.exec(hisCookie)[1] : null;
-        $.logger.info(`用于比较Cookie变化\n新:${compareCookie2}\n旧:${compareHisCookie2}`);
-        if (compareCookie2 !== compareHisCookie2) {
-          $.data.write(elemeCookieKey, cookie, currentUserId);
+        const compareHisCookie = !!hisCookie ? regStr.exec(hisCookie)[1] : null;
+        $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
+        if (compareCookie !== compareHisCookie) {
+          $.data.write(sankuaiCookieKey, cookie, currentUserId);
           $.notification.post("Cookie更新成功！");
         }
       }
-      if ($.data.read(elemeSyncQinglongKey, false) === true) {
-        hisCookie = await $.qinglong.read(elemeCookieKey, "", currentUserId);
+      if ($.data.read(sankuaiSyncQinglongKey, false) === true) {
+        hisCookie = await $.qinglong.read(sankuaiCookieKey, "", currentUserId);
         $.logger.info(`青龙面板中旧的Cookies\n${hisCookie}`);
         if (!hisCookie) {
-          await $.qinglong.write(elemeCookieKey, cookie, currentUserId);
+          await $.qinglong.write(sankuaiCookieKey, cookie, currentUserId);
           $.notification.post("Cookie同步至青龙面板成功！");
         }
         else {
-          const compareHisCookie2 = !!hisCookie ? /cookie2=([a-zA-Z0-9]*)/.exec(hisCookie)[1] : null;
-          $.logger.info(`用于比较Cookie变化\n新:${compareCookie2}\n旧:${compareHisCookie2}`);
-          if (compareCookie2 !== compareHisCookie2) {
-            await $.qinglong.write(elemeCookieKey, cookie, currentUserId);
+          const compareHisCookie = !!hisCookie ? regStr.exec(hisCookie)[1] : null;
+          $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
+          if (compareCookie !== compareHisCookie) {
+            await $.qinglong.write(sankuaiCookieKey, cookie, currentUserId);
             $.notification.post("Cookie同步至青龙面板成功！");
           }
         }
@@ -105,204 +76,88 @@ async function getCookies() {
 }
 
 function addConfig(config) {
-  currentCoordinate = currentCoordinate || $.data.read(elemeCoordinateKey, "", currentUserId);
   config.headers.Cookie = currentCookies;
-  config.headers["x-shard"] = `loc=${currentCoordinate.longitude},${currentCoordinate.latitude}`;
   return config;
 }
 $.http.interceptors.request.use(addConfig);
 
-// 获取待领取的吃货豆列表
-function getPeaList() {
+// 获取红包id
+function getRedBagId() {
   return new Promise((resolve, reject) => {
-    currentCoordinate = currentCoordinate || $.data.read(elemeCoordinateKey, "", currentUserId);
     $.http.get({
-      url: `https://h5.ele.me/restapi/biz.svip_core/v1/foodie/homepage?longitude=${currentCoordinate.longitude}&latitude=${currentCoordinate.latitude}`,
-      headers: {
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-cn",
-        "Connection": "keep-alive",
-        "Host": "h5.ele.me",
-        "Referer": "https://h5.ele.me/svip/home?entryStat=profile",
-        "User-Agent": "Rajax/1 Apple/iPhone10,3 iOS/14.2 Eleme/9.3.8",
-        "f-pTraceId": "WVNet_WV_2-3-74",
-        "f-refer": "wv_h5"
-      }
-    }).then(resp => {
-      const obj = resp.body;
-      if (obj.success === true) {
-        let peaList = [];
-        obj.foodiePeaBlock.peaList.forEach(element => {
-          peaList.push({ 'id': element.id, 'count': element.count, 'description': element.description });
-        });
-        $.logger.info(`获取待领取的吃货豆成功：${JSON.stringify(peaList)}`);
-        resolve(peaList);
-      }
-      else {
-        const msg = `获取待领取的吃货豆失败\n${JSON.stringify(obj)}`;
-        $.logger.warning(msg);
-        reject(msg);
-      }
+      url: appjsUrl,
+    }).then(res => {
+      const idStrList = res.match(/redBagList1:{redbagId1:"([\s\S]*?)"/g);
+      let temp = idStrList.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o);
+      let idList = Array.from(new Set(temp));
+      const amId = idList[0];
+      const pmId = idList[1];
+      $.data.write(redBagKeyOfAm, amId);
+      $.data.write(redBagKeyOfPm, pmId);
+      $.logger.info(`获取社群红包id成功：${idList.join(',')}`);
     }).catch(err => {
-      const msg = `获取待领取的吃货豆出现异常\n${err}`;
+      const msg = `${appjsUrl}\n请求异常\n${err}`;
       $.logger.error(msg);
       reject(msg);
     })
   })
 }
 
-// 领取吃货豆
-function drawPea(peaId) {
+// 领取红包
+function getRedBag(couponReferId) {
   return new Promise((resolve, reject) => {
-    currentCoordinate = currentCoordinate || $.data.read(elemeCoordinateKey, "", currentUserId);
     $.http.post({
-      url: `https://h5.ele.me/restapi/biz.svip_bonus/v1/users/supervip/pea/draw?peaId=${peaId}`,
+      url: `https://promotion.waimai.meituan.com/lottery/limitcouponcomponent/fetchcoupon?couponReferId=${couponReferId}&actualLng=113.37310028076172&actualLat=23.12600326538086&geoType=2&gdPageId=379391&utmSource=70200&utmCampaign=wmsq-51037&instanceId=16619982800580.30892480633143027`,
       headers: {
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-cn",
-        "Connection": "keep-alive",
-        "Content-Type": "application/json;charset=utf-8",
-        "Host": "h5.ele.me",
-        "Origin": "https://h5.ele.me",
-        "Referer": "https://h5.ele.me/svip/home?entryStat=profile",
-        "User-Agent": "Rajax/1 Apple/iPhone10,3 iOS/14.2 Eleme/9.3.8",
-        "f-pTraceId": "WVNet_WV_2-3-73",
-        "f-refer": "wv_h5"
+        'Accept' : `application/json, text/plain, */*`,
+        'Origin' : `https://market.waimai.meituan.com`,
+        'Accept-Encoding' : `gzip, deflate, br`,
+        'Content-Type' : `application/json;charset=utf-8`,
+        'Host' : `promotion.waimai.meituan.com`,
+        'Connection' : `keep-alive`,
+        'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.26(0x18001a34) NetType/2G Language/zh_CN miniProgram/wx2c348cf579062e56`,
+        'Referer' : `https://market.waimai.meituan.com/`,
+        'Accept-Language' : `zh-CN,zh-Hans;q=0.9`
       },
-      body: JSON.stringify(currentCoordinate)
+      body: bodyData
     }).then(resp => {
       const obj = resp.body;
-      if (obj.success === true) {
-        $.logger.info(`领取吃货豆成功\n${JSON.stringify(obj)}`);
+      if (obj.msg === '已领取') {
+        $.logger.info(`已领取红包${obj.priceLimit}-${obj.couponValue}`);
         resolve(true);
       }
       else {
-        const msg = `领取吃货豆失败\n${JSON.stringify(obj)}`;
+        const msg = `领取红包失败\n${JSON.stringify(obj)}`;
         $.logger.warning(msg);
-        reject(msg)
+        reject(false)
       }
     }).catch(err => {
-      const msg = `领取吃货豆异常\n${err}`;
+      const msg = `领取红包异常\n${err}`;
       $.logger.error(msg);
-      reject(msg)
+      reject(false)
     })
   })
 }
 
-// 获取超级会员任务列表
-function getSuperVipMissions() {
-  return new Promise((resolve, reject) => {
-    // 获取配置的任务关键词
-    let taskKeywords = $.data.read(elemeTaskKey, "美食外卖");
-    $.logger.info(`只获取含有以下关键词的任务：${taskKeywords}`);
-    taskKeywords = taskKeywords.split(';');
-    // 获取坐标
-    currentCoordinate = currentCoordinate || $.data.read(elemeCoordinateKey, "", currentUserId);
-    $.http.get({
-      url: `https://h5.ele.me/restapi/svip_biz/v1/supervip/query_mission_list?longitude=${currentCoordinate.longitude}&latitude=${currentCoordinate.latitude}`,
-      headers: {
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-cn",
-        "Connection": "keep-alive",
-        "Host": "h5.ele.me",
-        "Referer": "https://h5.ele.me/svip/home?entryStat=profile",
-        "User-Agent": "Rajax/1 Apple/iPhone10,3 iOS/14.2 Eleme/9.3.8",
-        "f-pTraceId": "WVNet_WV_2-3-30",
-        "f-refer": "wv_h5"
-      },
-    }).then(resp => {
-      const obj = resp.body;
-      if (obj && obj.missions) {
-        let result = [];
-        obj.missions.forEach((element) => {
-          let missionInfo = JSON.stringify(element);
-          let flag = false;
-          for (keyword of taskKeywords) {
-            if (missionInfo.indexOf(keyword) >= 0) {
-              flag = true;
-              break;
-            }
-          }
-          if (flag === true) {
-            result.push(element.mission_id);
-          }
-        });
-        resolve(result);
-      }
-      else {
-        const msg = `获取待领取的会员任务失败\n${JSON.stringify(obj)}`;
-        $.logger.warning(msg);
-        reject(msg);
-      }
-    }).catch(err => {
-      const msg = `获取待领取的会员任务异常\n${JSON.stringify(err)}`;
-      $.logger.error(msg);
-      reject(msg);
-    })
-  });
-}
-
-// 接受超级会员任务列表中的任务
-function acceptMission(missionId) {
-  return new Promise((resolve, reject) => {
-    const _mission_id = encodeURIComponent(missionId);
-    // 获取坐标
-    currentCoordinate = currentCoordinate || $.data.read(elemeCoordinateKey, "", currentUserId);
-    $.http.post({
-      url: `https://h5.ele.me/restapi/svip_biz/v1/supervip/accept_mission?type=0&receiveType=1&mission_id=${_mission_id}`,
-      headers: {
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-cn",
-        "Connection": "keep-alive",
-        "Content-Type": "application/json;charset=utf-8",
-        "Host": "h5.ele.me",
-        "Origin": "https://h5.ele.me",
-        "Referer": "https://h5.ele.me/svip/home?entryStat=profile",
-        "User-Agent": "Rajax/1 Apple/iPhone10,3 iOS/14.5.1 Eleme/9.8.5",
-        "f-pTraceId": "WVNet_WV_1-1-40",
-        "f-refer": "wv_h5"
-      },
-      body: currentCoordinate,
-    }).then(resp => {
-      const obj = resp.body;
-      if (obj.success === true) {
-        $.logger.info(`领取会员任务成功，任务Id：${missionId}，任务描述：${obj.mission.checkout_description}`);
-        resolve(obj.mission.checkout_description);
-      } else {
-        const msg = `领取会员任务失败，任务Id：${missionId}\n${JSON.stringify(obj)}`;
-        $.logger.warning(msg);
-        reject(msg);
-      }
-    }).catch(err => {
-      const msg = `领取会员任务异常，任务Id：${missionId}\n${err}`;
-      $.logger.error(msg);
-      reject(msg);
-    })
-  });
-}
-
-
 ; (async () => {
   if ($.isRequest) {
-    if ((
-      getCoordinateRegex1.test($.request.url) ||
-      getCoordinateRegex2.test($.request.url) ||
-      getCoordinateRegex3.test($.request.url)
-    ) && $.request.method == "GET") {
-      await getCoordinate();
-    }
-    else if (getCookiesRegex.test($.request.url)) {
+    if (getCookiesRegex.test($.request.url)) {
       await getCookies();
     }
   }
   else {
-    const allSessions = $.data.allSessions(elemeCookieKey);
+    await getRedBagId();
+    const isAm = new Date().getHours();
+    const redBagId = isAm < 12 ? $.data.read(redBagKeyOfAm, "") : $.data.read(redBagKeyOfPm, "");
+    if (!redBagId) {
+      const msg = `没有读取到需要秒杀的红包ID!`;
+      $.logger.warning(msg);
+      $.notification.post(msg);
+      return;
+    }
+    const allSessions = $.data.allSessions(sankuaiCookieKey);
     if (!allSessions) {
-      const msg = "没有读取到需要执行的Cookies，请先打开饿了么获取!";
+      const msg = `没有读取到需要执行的Cookies，请先打开${pageUrl}获取!`;
       $.logger.warning(msg);
       $.notification.post(msg);
     }
@@ -312,51 +167,9 @@ function acceptMission(missionId) {
         $.logger.info(`正在执行第 ${index + 1} 个Cookie的任务`);
         let content = "";
         currentUserId = session;
-        currentCookies = $.data.read(elemeCookieKey, "", session);
-        // 获取待领取的吃货豆
-        $.logger.info("开始领取吃货豆")
-        let peaCount = 0;
-        let drawPeaContent = '';
-        const peaList = await getPeaList();
-        if (!!peaList && peaList.length > 0) {
-          let tasks = [];
-          peaList.forEach(pea => {
-            tasks.push($.utils.retry(drawPea, 3, 500)(pea.id).then(() => {
-              peaCount += pea.count;
-              drawPeaContent += `\n${pea.description}-${pea.count}吃货豆-领取成功`;
-            }).catch(() => {
-              drawPeaContent += `\n${pea.description}-${pea.count}吃货豆-领取失败`;
-            }));
-          });
-          await Promise.all(tasks).then(() => {
-            content = `本次共领取吃货豆${peaCount}个`;
-            $.logger.info(drawPeaContent);
-          })
-        }
-        else {
-          const msg = "没发现待领取的吃货豆";
-          content = msg;
-          $.logger.info(msg);
-        }
-
-        // 根据关键词领取任务
-        if ($.data.read(elemeMissionKey, true) === true) {
-          const missionIds = await $.utils.retry(getSuperVipMissions, 3, 1000)().catch(err => {
-            $.notification.post(err);
-          });
-          if (!!missionIds && missionIds.length > 0) {
-            $.logger.info(`匹配关键词的任务Id:\n${JSON.stringify(missionIds)}`);
-            content += !!content? "\n": "";
-            content += "会员任务领取结果:\n";
-            for (let missionId of missionIds) {
-              await $.utils.retry(acceptMission, 3, 1000)(missionId).then((desc) => {
-                content += desc;
-              }).catch(err => {
-                $.notification.post(err);
-              })
-            }
-          }
-        }
+        currentCookies = $.data.read(sankuaiCookieKey, "", session);
+        $.logger.info("开始抢红包")
+        $.utils.retry(getRedBag, 3, 500)(redBagId)
         $.notification.post(`${scriptName} - ${currentUserId}`, "", content);
         $.logger.info(`第 ${index + 1} 个Cookie任务执行完毕`);
       }
