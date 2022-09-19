@@ -129,14 +129,15 @@ function getRedBag(options) {
       },
       body: new Date().getHours() > 12 ? bodyData_pm :  bodyData_am
     }).then(res => {
+      let result = { success: true, msg: "msg" };
       const obj = res.body;
       if (obj.msg === '已领取') {
-        const msg = `用户${currentUserId}已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
-        resolve(msg);
+        result.msg = `用户${currentUserId}已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
       } else {
-        const msg = `用户${currentUserId}领取红包失败\n${JSON.stringify(obj)}`;
-        resolve(msg)
+        result.success = false;
+        result.msg = `用户${currentUserId}领取红包失败\n${JSON.stringify(obj)}`;
       }
+      resolve(result);
     }).catch(err => {
       const msg = `用户${currentUserId}领取红包异常\n${err}`;
       reject(msg)
@@ -185,10 +186,11 @@ function getRedBag(options) {
     }
     try {
       const resultList = await Promise.all(tasks);
-      const content = resultList.join('\n');
+      const content = resultList.map(o => o.msg).join('\n');
       $.logger.info(`任务执行完毕`);
       $.notification.post(`${scriptName}`, "", content);
-      $.data.write('redBagColdTime', new Date().getTime());
+      if (resultList.every(o => o.success)) 
+        $.data.write('redBagColdTime', new Date().getTime());
     } catch (error) {
       $.logger.error(`任务执行异常 \n ${error}`);
       $.notification.post(`${scriptName}`, "任务执行异常", error);
