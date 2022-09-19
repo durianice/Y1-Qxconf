@@ -11,9 +11,6 @@ let currentUserId = "";
 let currentCookies = "";
 let currentCoordinate = null;
 
-const redBagKeyOfAm = '25-12_am';
-const redBagKeyOfPm = '25-12_pm';
-
 const $ = MagicJS(scriptName, "INFO");
 
 const bodyData_pm = `{"cType":"wm_wxapp","fpPlatform":13,"wxOpenId":"","appVersion":"","mtFingerprint":"H5dfp_1.5.1_tttt_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"}`;
@@ -93,14 +90,14 @@ function getRedBagId() {
       const bag_25_12 = res.body.match(/redBagList1:{redbagId1:"([\s\S]*?)"/g);
       // const bag_28_7 = res.body.match(/redBagList2{redbagId1:"([\s\S]*?)"/g);
       const bag_22_6 = res.body.match(/redbagId2:"([\s\S]*?)"/g);
-      const isStrList = h > 10 && h < 15 || h > 16 || h < 8 ? bag_22_6 : bag_25_12;
-      let temp = isStrList.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o);
-      let idList = Array.from(new Set(temp));
-      const amId = idList[0];
-      const pmId = idList[1];
-      $.data.write(redBagKeyOfAm, amId);
-      $.data.write(redBagKeyOfPm, pmId);
-      $.logger.info(`获取社群红包id成功：${idList.join('\n')}`);
+      let [a, b] = Array.from(new Set(bag_25_12.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o)));
+      let [c, d] = Array.from(new Set(bag_22_6.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o)));
+      $.data.write('bag_25_12', a, 'am');
+      $.data.write('bag_25_12', b, 'pm');
+      $.data.write('bag_22_6', c, 'am');
+      $.data.write('bag_22_6', d, 'pm');
+      $.data.write('red_bag_expire_time', new Date().getTime());
+      $.logger.info(`已保存以下红包ID \n ${[ a, b, c, d ].join('\n')}`);
       resolve(1);
     }).catch(err => {
       const msg = `${appjsUrl}\n请求异常\n${err}`;
@@ -154,13 +151,20 @@ function getRedBag(options) {
   else {
     const redBagColdTime = Number($.data.read('redBagColdTime', ""));
     if (new Date().getTime() - redBagColdTime < 60 * 1000) {
-      $.logger.warning(`---------------冷却中，请稍后再试---------------`);
+      $.logger.warning(`冷却中，请稍后再试^^`);
       $.done();
       return;
     }
-    await getRedBagId();
-    const isAm = new Date().getHours() < 12;
-    const redBagId = isAm ? $.data.read(redBagKeyOfAm, "") : $.data.read(redBagKeyOfPm, "");
+    const h = new Date().getHours();
+    const bagKey = h > 10 && h < 15 || h > 16 || h < 8 ? 'bag_22_6' : 'bag_25_12';
+    const subKey = h < 12 ? 'am' : 'pm';
+    let redBagId = $.data.read(bagKey, "", subKey)
+    const redBagExpire = new Date().getTime() - Number($.data.read('red_bag_expire_time', "")) > 2 * 24 * 60 * 60 * 1000;
+    if (!redBagId || redBagExpire) {
+      $.logger.info(`请求刷新红包ID`);
+      await getRedBagId();
+      redBagId = $.data.read(bagKey, "", subKey)
+    }
     if (!redBagId) {
       const msg = `没有读取到红包ID!`;
       $.logger.warning(msg);
@@ -176,7 +180,7 @@ function getRedBag(options) {
       $.done();
       return;
     }
-    $.logger.info(`目标红包ID: ${redBagId} \n 共${allSessions.length}个Cookies需要执行`);
+    $.logger.info(`目标红包ID: ${bagKey}_${subKey}_${redBagId} \n 共${allSessions.length}个Cookies需要执行`);
     let tasks = [];
     for (let [index, session] of allSessions.entries()) {
       currentUserId = session;
@@ -187,10 +191,12 @@ function getRedBag(options) {
     try {
       const resultList = await Promise.all(tasks);
       const content = resultList.map(o => o.msg).join('\n');
-      $.logger.info(`任务执行完毕`);
+      $.logger.info(`所有任务执行完毕`);
       $.notification.post(`${scriptName}`, "", content);
-      if (resultList.every(o => o.success)) 
+      if (resultList.every(o => o.success)) {
+        $.logger.info(`刷新冷却时间`);
         $.data.write('redBagColdTime', new Date().getTime());
+      }
     } catch (error) {
       $.logger.error(`任务执行异常 \n ${error}`);
       $.notification.post(`${scriptName}`, "任务执行异常", error);
