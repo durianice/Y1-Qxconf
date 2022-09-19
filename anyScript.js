@@ -38,6 +38,12 @@ if (match_1) {
   m = m > 9 ? m : '0' + m;
   d = d > 9 ? d : '0' + d;
   let formDate = `${y}-${m}-${d} 10:30:00`;
-  obj.data = new Date(formDate).getTime();
+  let timestamp = new Date(formDate).getTime();
+  obj = {
+    code: 0,
+    subcode: 0,
+    data: timestamp,
+    msg: 'success'
+  };
 }
 $done({ body: JSON.stringify(obj) });
