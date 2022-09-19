@@ -170,12 +170,13 @@ function getRedBag(couponReferId) {
         let content = "";
         currentUserId = session;
         currentCookies = $.data.read(sankuaiCookieKey, "", session);
-        $.logger.info("开始抢红包")
-        $.utils.retry(getRedBag, 3, 500)(redBagId).then(() => {
-          $.logger.info("领取成功");
-        }).catch(() => $.logger.info("领取失败"));
-        $.notification.post(`${scriptName} - ${currentUserId}`, "", content);
-        $.logger.info(`第 ${index + 1} 个Cookie任务执行完毕`);
+        $.logger.info(`开始抢红包, 红包id: ${redBagId}`);
+        getRedBag(redBagId);
+        //$.utils.retry(getRedBag, 3, 500)(redBagId).then(() => {
+        // $.logger.info("领取成功");
+       // }).catch(() => $.logger.info("领取失败"));
+      //  $.notification.post(`${scriptName} - ${currentUserId}`, "", content);
+       // $.logger.info(`第 ${index + 1} 个Cookie任务执行完毕`);
       }
     }
   }
