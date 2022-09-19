@@ -81,14 +81,18 @@ function addConfig(config) {
 }
 $.http.interceptors.request.use(addConfig);
 
-// 获取红包id
+// 获取稀有红包id
 function getRedBagId() {
+  const h = new Date().getHours();
   return new Promise((resolve, reject) => {
     $.http.get({
       url: appjsUrl,
     }).then(res => {
-      const idStrList = res.body.match(/redBagList1:{redbagId1:"([\s\S]*?)"/g);
-      let temp = idStrList.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o);
+      const bag_25_12 = res.body.match(/redBagList1:{redbagId1:"([\s\S]*?)"/g);
+      // const bag_28_7 = res.body.match(/redBagList2{redbagId1:"([\s\S]*?)"/g);
+      const bag_22_6 = res.body.match(/redbagId2:"([\s\S]*?)"/g);
+      const isStrList = h > 10 && h < 15 || h > 16 || h < 8 ? bag_22_6 : bag_25_12;
+      let temp = isStrList.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o);
       let idList = Array.from(new Set(temp));
       const amId = idList[0];
       const pmId = idList[1];
@@ -129,7 +133,7 @@ function getRedBag(options) {
         resolve(msg);
       } else {
         const msg = `用户${currentUserId}领取红包失败\n${JSON.stringify(obj)}`;
-        reject(msg)
+        resolve(msg)
       }
     }).catch(err => {
       const msg = `用户${currentUserId}领取红包异常\n${err}`;
@@ -146,13 +150,13 @@ function getRedBag(options) {
   }
   else {
     const redBagColdTime = Number($.data.read('redBagColdTime', ""));
-    if (new Date().getTime() - redBagColdTime < 60 * 60 * 1000) {
-      $.logger.warning(`---------------冷却时间---------------`);
+    if (new Date().getTime() - redBagColdTime < 60 * 1000) {
+      $.logger.warning(`---------------冷却中，请稍后再试---------------`);
       return;
     }
     await getRedBagId();
-    const isAm = new Date().getHours();
-    const redBagId = isAm < 12 ? $.data.read(redBagKeyOfAm, "") : $.data.read(redBagKeyOfPm, "");
+    const isAm = new Date().getHours() < 12;
+    const redBagId = isAm ? $.data.read(redBagKeyOfAm, "") : $.data.read(redBagKeyOfPm, "");
     if (!redBagId) {
       const msg = `没有读取到红包ID!`;
       $.logger.warning(msg);
@@ -183,8 +187,7 @@ function getRedBag(options) {
       $.notification.post(`${scriptName}`, "", content);
       $.data.write('redBagColdTime', new Date().getTime());
     } catch (error) {
-      $.logger.info(`任务执行异常`);
-      $.logger.error(error);
+      $.logger.error(`任务执行异常 \n ${error}`);
       $.notification.post(`${scriptName}`, "任务执行异常", error);
     }
   }
