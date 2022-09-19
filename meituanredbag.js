@@ -145,6 +145,11 @@ function getRedBag(options) {
     }
   }
   else {
+    const redBagColdTime = Number($.data.read('redBagColdTime', ""));
+    if (new Date().getTime() - redBagColdTime < 60 * 60 * 1000) {
+      $.logger.warning(`---------------冷却时间---------------`);
+      return;
+    }
     await getRedBagId();
     const isAm = new Date().getHours();
     const redBagId = isAm < 12 ? $.data.read(redBagKeyOfAm, "") : $.data.read(redBagKeyOfPm, "");
@@ -171,15 +176,17 @@ function getRedBag(options) {
       const options = { redBagId, currentUserId };
       tasks.push(getRedBag(options));
     }
-    Promise.all(tasks).then(res => {
-      const content = res.join('\n');
+    try {
+      const resultList = await Promise.all(tasks);
+      const content = resultList.join('\n');
       $.logger.info(`任务执行完毕`);
       $.notification.post(`${scriptName}`, "", content);
-    }).catch(err => {
+      $.data.write('redBagColdTime', new Date().getTime());
+    } catch (error) {
       $.logger.info(`任务执行异常`);
-      $.logger.error(err);
-      $.notification.post(`${scriptName}`, "任务执行异常", err);
-    });
+      $.logger.error(error);
+      $.notification.post(`${scriptName}`, "任务执行异常", error);
+    }
   }
   $.done();
 })();
