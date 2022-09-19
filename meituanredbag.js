@@ -94,7 +94,7 @@ function getRedBagId() {
       const pmId = idList[1];
       $.data.write(redBagKeyOfAm, amId);
       $.data.write(redBagKeyOfPm, pmId);
-      $.logger.info(`获取社群红包id成功：${idList.join(',')}`);
+      $.logger.info(`获取社群红包id成功：${idList.join('\n')}`);
       resolve(1);
     }).catch(err => {
       const msg = `${appjsUrl}\n请求异常\n${err}`;
@@ -122,20 +122,17 @@ function getRedBag(options) {
         'Accept-Language' : `zh-CN,zh-Hans;q=0.9`
       },
       // body: bodyData
-    }).then(resp => {
-      const obj = resp.body;
+    }).then(res => {
+      const obj = res.body;
       if (obj.msg === '已领取') {
         const msg = `用户${currentUserId}已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
-        $.logger.info(msg);
         resolve(msg);
       } else {
         const msg = `用户${currentUserId}领取红包失败\n${JSON.stringify(obj)}`;
-        $.logger.warning(msg);
         reject(msg)
       }
     }).catch(err => {
       const msg = `用户${currentUserId}领取红包异常\n${err}`;
-      $.logger.error(msg);
       reject(msg)
     })
   })
@@ -164,7 +161,7 @@ function getRedBag(options) {
       $.notification.post(msg);
       return;
     }
-    $.logger.info(`所有红包ID: ${redBagId}`);
+    $.logger.info(`目标红包ID: ${redBagId}`);
     $.logger.info(`共${allSessions.length}个Cookies需要执行`);
     let tasks = [];
     for (let [index, session] of allSessions.entries()) {
@@ -172,19 +169,17 @@ function getRedBag(options) {
       currentUserId = session;
       currentCookies = $.data.read(sankuaiCookieKey, "", session);
       const options = { redBagId, currentUserId };
-      tasks.push($.utils.retry(getRedBag, 3, 500)(options));
+      tasks.push(getRedBag(options));
     }
-    await Promise.all(tasks).then(res => {
+    Promise.all(tasks).then(res => {
       const content = res.join('\n');
       $.logger.info(`任务执行完毕`);
       $.notification.post(`${scriptName}`, "", content);
     }).catch(err => {
-      const content = res.join('\n');
       $.logger.info(`任务执行异常`);
       $.logger.error(err);
       $.notification.post(`${scriptName}`, "任务执行异常", err);
     });
-    
   }
   $.done();
 })();
