@@ -178,6 +178,7 @@ function getRedBag(couponReferId) {
       //  $.notification.post(`${scriptName} - ${currentUserId}`, "", content);
        // $.logger.info(`第 ${index + 1} 个Cookie任务执行完毕`);
       }
+      await getRedBag(redBagId);
     }
   }
   $.done();
