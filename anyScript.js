@@ -16,6 +16,7 @@ function presetZero(num) {
 }
 
 var match_0 = url.indexOf("nucleicAcid/v1/result") > -1;
+var match_1 = url.indexOf("https://promotion.waimai.meituan.com/lottery/limitcouponcomponent/getTime") > -1;
 if (match_0) {
   let pastDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   let y = pastDate.getFullYear();
@@ -28,5 +29,15 @@ if (match_0) {
   let testing_date = `${yesterday} ${endHms}`;
   let temp = { sampling_date, testing_date };
   Object.assign(obj.data[0], temp);
+}
+if (match_1) {
+  const nowDate = new Date();
+  let y = nowDate.getFullYear();
+  let m = nowDate.getMonth() + 1;
+  let d = nowDate.getDate();
+  m = m > 9 ? m : '0' + m;
+  d = d > 9 ? d : '0' + d;
+  let formDate = `${y}-${m}-${d} 10:30:00`;
+  obj.data = new Date(formDate).getTime();
 }
 $done({ body: JSON.stringify(obj) });
