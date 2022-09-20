@@ -2,14 +2,10 @@
 const pageUrl = `https://market.waimai.meituan.com/gd/single.html?el_biz=waimai&el_page=gundam.loader&activity_id=220542&tenant=gundam&gundam_id=3axN8G`;
 const scriptName = '美团外卖红包';
 const getCookiesRegex = /^https?:\/\/market\.waimai\.meituan\.com\/gd\/single\.html.*/;
-const templateUrl = `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&activity_id=220542&tenant=gundam&gundam_id=3axN8G`;
+const getAppjsUrl = `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&activity_id=220542&tenant=gundam&gundam_id=3axN8G`;
 const appjsUrl = `https://s3plus.meituan.net/v1/mss_91f3b645703642ce914d9ce3610eaf4c/gundampage/app.1662695184234ab1dc534708743bde6f04219fcad192a.js`
 const sankuaiCookieKey = 'sankuai_cookies';
-const sankuaiMissionKey = 'sankuai_mission';
 const sankuaiSyncQinglongKey = 'sankuai_sync_qinglong';
-let currentUserId = "";
-let currentCookies = "";
-let currentCoordinate = null;
 
 const $ = MagicJS(scriptName, "INFO");
 
@@ -28,7 +24,7 @@ async function getCookies() {
   try {
     const cookie = $.request.headers.Cookie;
     $.logger.info(`本次运行获取的新Cookies\n${cookie}`);
-    currentUserId = getUserId(cookie);
+    const currentUserId = getUserId(cookie);
     const regStr = /_lxsdk_s=([a-zA-Z0-9\-%]*)/
     const compareCookie = !!cookie ? regStr.exec(cookie)[1] : null;
     // 获取存储池中的旧Cookie
@@ -73,12 +69,6 @@ async function getCookies() {
   }
 }
 
-function addConfig(config) {
-  config.headers.Cookie = currentCookies;
-  return config;
-}
-$.http.interceptors.request.use(addConfig);
-
 // 获取稀有红包id
 function getRedBagId() {
   const h = new Date().getHours();
@@ -108,7 +98,7 @@ function getRedBagId() {
 
 // 领取红包
 function getRedBag(options) {
-  const { currentUserId, redBagId } = options;
+  const { redBagId, userId, cookies } = options;
   return new Promise((resolve, reject) => {
     $.http.post({
       url: `https://promotion.waimai.meituan.com/lottery/limitcouponcomponent/fetchcoupon?couponReferId=${redBagId}&actualLng=113.37310028076172&actualLat=23.12600326538086&geoType=2&gdPageId=379391&utmSource=70200&utmCampaign=wmsq-51037&instanceId=16619982800580.30892480633143027`,
@@ -121,21 +111,22 @@ function getRedBag(options) {
         'Connection' : `keep-alive`,
         'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.26(0x18001a34) NetType/2G Language/zh_CN miniProgram/wx2c348cf579062e56`,
         'Referer' : `https://market.waimai.meituan.com/`,
-        'Accept-Language' : `zh-CN,zh-Hans;q=0.9`
+        'Accept-Language' : `zh-CN,zh-Hans;q=0.9`,
+        Cookie: cookies
       },
-      body: new Date().getHours() > 12 ? bodyData_pm :  bodyData_am
+      // body: new Date().getHours() > 12 ? bodyData_pm :  bodyData_am
     }).then(res => {
       let result = { success: true, msg: "msg" };
       const obj = res.body;
       if (obj.msg === '已领取') {
-        result.msg = `用户${currentUserId}已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
+        result.msg = `用户${userId}已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
       } else {
         result.success = false;
-        result.msg = `用户${currentUserId}领取红包失败\n${JSON.stringify(obj)}`;
+        result.msg = `用户${userId}领取红包失败\n${JSON.stringify(obj)}`;
       }
       resolve(result);
     }).catch(err => {
-      const msg = `用户${currentUserId}领取红包异常\n${err}`;
+      const msg = `用户${userId}领取红包异常\n${err}`;
       reject(msg)
     })
   })
@@ -182,9 +173,10 @@ function getRedBag(options) {
     $.logger.info(`目标红包ID: ${bagKey}_${subKey}_${redBagId} \n 共${allSessions.length}个Cookies需要执行`);
     let tasks = [];
     for (let [index, session] of allSessions.entries()) {
-      currentUserId = session;
-      currentCookies = $.data.read(sankuaiCookieKey, "", session);
-      const options = { redBagId, currentUserId };
+      const userId = session;
+      const cookies = $.data.read(sankuaiCookieKey, "", session);
+      $.logger.info(`当前用户cookie \n ${cookies}`);
+      const options = { redBagId, userId, cookies };
       tasks.push(getRedBag(options));
     }
     try {
