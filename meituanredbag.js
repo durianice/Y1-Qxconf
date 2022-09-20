@@ -6,6 +6,7 @@ const getAppjsUrl = `https://market.waimai.meituan.com/api/template/get?env=curr
 const appjsUrl = `https://s3plus.meituan.net/v1/mss_91f3b645703642ce914d9ce3610eaf4c/gundampage/app.1662695184234ab1dc534708743bde6f04219fcad192a.js`
 const sankuaiCookieKey = 'sankuai_cookies';
 const sankuaiSyncQinglongKey = 'sankuai_sync_qinglong';
+let requestCount = 0;
 
 const $ = MagicJS(scriptName, "INFO");
 
@@ -100,7 +101,7 @@ function getRedBagId() {
 // 领取红包
 function getRedBag(options) {
   const { redBagId, userId, cookies } = options;
-  $.logger.warning(`已提交抢券请求`);
+  const startTime = new Date().getTime();
   return new Promise((resolve, reject) => {
     $.http.post({
       url: `https://promotion.waimai.meituan.com/lottery/limitcouponcomponent/fetchcoupon?couponReferId=${redBagId}&actualLng=113.37310028076172&actualLat=23.12600326538086&geoType=2&gdPageId=379391&utmSource=70200&utmCampaign=wmsq-51037&instanceId=16619982800580.30892480633143027`,
@@ -119,7 +120,7 @@ function getRedBag(options) {
       body: new Date().getHours() > 12 ? bodyData_pm :  bodyData_am
     }).then(res => {
       let result = { success: true, msg: "msg" };
-      const { msg, code, subcode, data: { priceLimit, couponValue } } = res.body
+      const { msg, code, subcode } = res.body
       if ((code == 0 && subcode == 0) || (code == 1 && subcode == 2)) {
         const { data: { priceLimit, couponValue } } = res.body
         result.msg = `用户 ${userId} ${msg} ${priceLimit}-${couponValue}`;
@@ -127,6 +128,8 @@ function getRedBag(options) {
         result.success = false;
         result.msg = `用户 ${userId} ${msg}`;
       }
+      requestCount ++;
+      $.logger.warning(`已完成第${requestCount}次提交，此次提交用时 ${(new Date().getTime() - startTime) / 1000} s`);
       resolve(result);
     }).catch(err => {
       const msg = `用户 ${userId} 领取红包异常 \n ${err}`;
@@ -195,6 +198,7 @@ function getRedBag(options) {
       const resultList = await Promise.all(tasks.map((promiseItem) => promiseItem.catch((err) => err)));
       const content = resultList.map(o => o.msg).join('\n');
       $.logger.info(`所有任务执行完毕`);
+      requestCount = 0;
       $.notification.post(`${scriptName}`, "", content);
       if (resultList.every(o => o.success)) {
         $.logger.info(`刷新冷却时间`);
