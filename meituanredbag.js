@@ -77,7 +77,7 @@ function getRedBagId() {
       url: appjsUrl,
     }).then(res => {
       const bag_25_12 = res.body.match(/redBagList1:{redbagId1:"([\s\S]*?)"/g);
-      const bag_28_7 = res.body.match(/redBagList2{redbagId1:"([\s\S]*?)"/g);
+      const bag_28_7 = res.body.match(/redBagList2:{redbagId1:"([\s\S]*?)"/g);
       const bag_22_6 = res.body.match(/redbagId2:"([\s\S]*?)"/g);
       let [a, b] = Array.from(new Set(bag_25_12.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o)));
       let [c, d] = Array.from(new Set(bag_22_6.map(o => o.match(/"([\s\S]*?)"/)[1]).filter(o => o)));
@@ -120,14 +120,14 @@ function getRedBag(options) {
       let result = { success: true, msg: "msg" };
       const obj = res.body;
       if (obj.msg === '已领取') {
-        result.msg = `用户${userId}已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
+        result.msg = `用户${userId}已领取${redBagId}红包${obj.data.priceLimit}-${obj.data.couponValue}`;
       } else {
         result.success = false;
-        result.msg = `用户${userId}领取红包失败\n${JSON.stringify(obj)}`;
+        result.msg = `用户${userId}领取${redBagId}红包失败\n${JSON.stringify(obj)}`;
       }
       resolve(result);
     }).catch(err => {
-      const msg = `用户${userId}领取红包异常\n${err}`;
+      const msg = `用户${userId}领取${redBagId}红包异常\n${err}`;
       reject(msg)
     })
   })
@@ -149,7 +149,7 @@ function getRedBag(options) {
     const h = new Date().getHours();
     // const bagKey = h > 10 && h < 15 || h > 16 || h < 8 ? 'bag_22_6' : 'bag_25_12';
     const subKey = h < 11 ? 'am' : 'pm';
-    const redBagIds = $.data.read('red_bag_ids', "", subKey)
+    let redBagIds = $.data.read('red_bag_ids', "", subKey)
     const redBagExpire = new Date().getTime() - Number($.data.read('red_bag_expire_time', "")) > 2 * 24 * 60 * 60 * 1000;
     if (!redBagIds.length || redBagExpire) {
       $.logger.info(`请求刷新红包ID`);
@@ -177,7 +177,7 @@ function getRedBag(options) {
       for (let [index, session] of allSessions.entries()) {
         const userId = session;
         const cookies = $.data.read(sankuaiCookieKey, "", session);
-        $.logger.info(`当前用户cookie \n ${cookies}`);
+        // $.logger.info(`当前用户cookie \n ${cookies}`);
         const options = { redBagId, userId, cookies };
         tasks.push(getRedBag(options));
       }
