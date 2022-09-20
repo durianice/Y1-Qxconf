@@ -182,15 +182,15 @@ function getRedBag(options) {
       const userId = session;
       const cookies = $.data.read(sankuaiCookieKey, "", session);
       // $.logger.info(`当前用户cookie \n ${cookies}`);
-      const justBig = false;
+      const justBig = h == 10;
       if (justBig) {
         // 高峰期只抢大的
         const options = { redBagId: redBagIds[0], userId, cookies };
-        tasks.push($.utils.retry(getRedBag, 5, 10, (result) => Promise.reject(result))(options));
+        tasks.push($.utils.retry(getRedBag, 3, 0)(options));
       } else {
         redBagIds.forEach(redBagId => {
           const options = { redBagId, userId, cookies };
-          tasks.push($.utils.retry(getRedBag, 5, 10, (result) => Promise.reject(result))(options));
+          tasks.push($.utils.retry(getRedBag, 3, 0, (result) => Promise.reject(result))(options));
         })
       }
     }
