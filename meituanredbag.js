@@ -188,11 +188,7 @@ function getRedBag(options) {
       tasks.push(getRedBag(options));
     }
     try {
-      const resultList = await Promise.all(tasks.map(function(promiseItem) {
-        return promiseItem.catch(function(err) {
-          return err
-        })
-      }));
+      const resultList = await Promise.all(tasks.map((promiseItem) => promiseItem.catch((err) => err)));
       const content = resultList.map(o => o.msg).join('\n');
       $.logger.info(`所有任务执行完毕`);
       $.notification.post(`${scriptName}`, "", content);
