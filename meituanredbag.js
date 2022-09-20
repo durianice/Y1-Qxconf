@@ -173,15 +173,22 @@ function getRedBag(options) {
     }
     $.logger.info(`目标红包ID: ${redBagIds.join('\n')} \n 共${allSessions.length}个Cookies需要执行`);
     let tasks = [];
-    redBagIds.forEach(redBagId => {
-      for (let [index, session] of allSessions.entries()) {
-        const userId = session;
-        const cookies = $.data.read(sankuaiCookieKey, "", session);
-        // $.logger.info(`当前用户cookie \n ${cookies}`);
-        const options = { redBagId, userId, cookies };
+    
+    for (let [index, session] of allSessions.entries()) {
+      const userId = session;
+      const cookies = $.data.read(sankuaiCookieKey, "", session);
+      // $.logger.info(`当前用户cookie \n ${cookies}`);
+      if (h == 10 || h == 15) {
+        // 高峰期只抢大的
+        const options = { redBagId: redBagIds[0], userId, cookies };
         tasks.push(getRedBag(options));
+      } else {
+        redBagIds.forEach(redBagId => {
+          const options = { redBagId, userId, cookies };
+          tasks.push(getRedBag(options));
+        })
       }
-    })
+    }
     try {
       const resultList = await Promise.all(tasks.map((promiseItem) => promiseItem.catch((err) => err)));
       const content = resultList.map(o => o.msg).join('\n');
