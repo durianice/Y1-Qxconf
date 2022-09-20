@@ -34,6 +34,7 @@ async function getCookies() {
     if (!!cookie) {
       if (!hisCookie) {
         $.data.write(sankuaiCookieKey, cookie, currentUserId);
+        $.logger.info(`新增Cookie \n ${cookie}`);
         $.notification.post(`用户 ${currentUserId} Cookie获取成功！`);
       }
       else {
@@ -41,6 +42,7 @@ async function getCookies() {
         $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
         if (compareCookie !== compareHisCookie) {
           $.data.write(sankuaiCookieKey, cookie, currentUserId);
+          $.logger.info(`更新后的Cookie \n ${cookie}`);
           $.notification.post(`用户 ${currentUserId} Cookie更新成功！`);
         }
       }
