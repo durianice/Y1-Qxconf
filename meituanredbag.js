@@ -33,14 +33,14 @@ async function getCookies() {
     if (!!cookie) {
       if (!hisCookie) {
         $.data.write(sankuaiCookieKey, cookie, currentUserId);
-        $.notification.post(`用户${currentUserId}Cookie获取成功！`);
+        $.notification.post(`用户 ${currentUserId} Cookie获取成功！`);
       }
       else {
         const compareHisCookie = !!hisCookie ? regStr.exec(hisCookie)[1] : null;
         $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
         if (compareCookie !== compareHisCookie) {
           $.data.write(sankuaiCookieKey, cookie, currentUserId);
-          $.notification.post(`用户${currentUserId}Cookie更新成功！`);
+          $.notification.post(`用户 ${currentUserId} Cookie更新成功！`);
         }
       }
       if ($.data.read(sankuaiSyncQinglongKey, false) === true) {
@@ -118,18 +118,18 @@ function getRedBag(options) {
       body: new Date().getHours() > 12 ? bodyData_pm :  bodyData_am
     }).then(res => {
       let result = { success: true, msg: "msg" };
-      const obj = res.body;
-      const msg = obj.msg
-      if (msg === '已领取') {
-        result.msg = `用户${userId}已领取红包${obj.data.priceLimit}-${obj.data.couponValue}`;
+      const { msg, code, subcode, data: { priceLimit, couponValue } } = res.body
+      if ((code == 0 && subcode == 0) || (code == 1 && subcode == 2)) {
+        const { data: { priceLimit, couponValue } } = res.body
+        result.msg = `用户 ${userId} ${msg} ${priceLimit}-${couponValue}`;
       } else {
         result.success = false;
-        result.msg = `用户${userId}领取红包失败：${msg}`;
+        result.msg = `用户 ${userId} ${msg}`;
       }
       resolve(result);
     }).catch(err => {
-      const msg = `用户${userId}领取红包异常\n${err}`;
-      reject(msg)
+      const msg = `用户 ${userId} 领取红包异常 \n ${err}`;
+      reject(msg);
     })
   })
 }
@@ -179,7 +179,8 @@ function getRedBag(options) {
       const userId = session;
       const cookies = $.data.read(sankuaiCookieKey, "", session);
       // $.logger.info(`当前用户cookie \n ${cookies}`);
-      if (false) {
+      const justBig = false;
+      if (justBig) {
         // 高峰期只抢大的
         const options = { redBagId: redBagIds[0], userId, cookies };
         tasks.push(getRedBag(options));
