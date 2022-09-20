@@ -100,6 +100,7 @@ function getRedBagId() {
 // 领取红包
 function getRedBag(options) {
   const { redBagId, userId, cookies } = options;
+  $.logger.warning(`已提交抢券请求`);
   return new Promise((resolve, reject) => {
     $.http.post({
       url: `https://promotion.waimai.meituan.com/lottery/limitcouponcomponent/fetchcoupon?couponReferId=${redBagId}&actualLng=113.37310028076172&actualLat=23.12600326538086&geoType=2&gdPageId=379391&utmSource=70200&utmCampaign=wmsq-51037&instanceId=16619982800580.30892480633143027`,
@@ -174,7 +175,6 @@ function getRedBag(options) {
     }
     $.logger.info(`目标红包ID: ${redBagIds.join('\n')} \n 共${allSessions.length}个Cookies需要执行`);
     let tasks = [];
-    
     for (let [index, session] of allSessions.entries()) {
       const userId = session;
       const cookies = $.data.read(sankuaiCookieKey, "", session);
@@ -183,11 +183,11 @@ function getRedBag(options) {
       if (justBig) {
         // 高峰期只抢大的
         const options = { redBagId: redBagIds[0], userId, cookies };
-        tasks.push(getRedBag(options));
+        tasks.push($.utils.retry(getRedBag, 5, 10, (result) => Promise.reject(result))(options));
       } else {
         redBagIds.forEach(redBagId => {
           const options = { redBagId, userId, cookies };
-          tasks.push(getRedBag(options));
+          tasks.push($.utils.retry(getRedBag, 5, 10, (result) => Promise.reject(result))(options));
         })
       }
     }
