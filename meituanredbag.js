@@ -117,7 +117,7 @@ function getRedBag(options) {
         'Accept-Language' : `zh-CN,zh-Hans;q=0.9`,
         Cookie: cookies
       },
-      body: new Date().getHours() > 12 ? bodyData_pm :  bodyData_am
+      body: new Date().getHours() > 11 ? bodyData_pm :  bodyData_am
     }).then(res => {
       let result = { success: true, msg: "msg" };
       const { msg, code, subcode } = res.body
