@@ -157,6 +157,7 @@ function getRedBag(options) {
     const availableOfPm = ["15:00:00","23:00:00"];
     const availableAmList = availableOfAm.map(o => new Date(`${y}-${m}-${d} ${o}`).getTime());
     const availablePmList = availableOfPm.map(o => new Date(`${y}-${m}-${d} ${o}`).getTime());
+    $.logger.info(`活动一时间：${availableAmList} \n 活动二时间：${availablePmList}`);
     const nowTimeStamp = now.getTime();
     const validAmTime = nowTimeStamp >= availableAmList[0] && nowTimeStamp <= availableAmList[1];
     const validPmTime = nowTimeStamp >= availablePmList[0] && nowTimeStamp <= availablePmList[1];
