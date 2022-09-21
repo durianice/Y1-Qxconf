@@ -115,8 +115,8 @@ function gamePass() {
     });
 }
 
-;
-(async () => {
+;(async () => {
+    $.logger.warning($.isRequest);
     if ($.isRequest) {
         rewriteBody();
     } else {
