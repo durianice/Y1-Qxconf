@@ -118,7 +118,9 @@ function gamePass() {
 
 ;(async () => {
     $.logger.warning($.isRequest);
-    if ($.isRequest) {
+    $.logger.warning($request);
+    $.logger.warning($response);
+    if ($.isResponse) {
         rewriteBody();
     } else {
         await $.utils.retry(gamePass, 10, 1000, (result) => Promise.reject(result))();
