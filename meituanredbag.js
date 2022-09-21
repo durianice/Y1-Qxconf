@@ -150,7 +150,7 @@ function getRedBag(options) {
   else {
     const now = new Date();
     const y = now.getFullYear();
-    const m = now.getMonth() + 1 > 9 ? now.getMonth() + 1 : '0' + now.getMonth() + 1;
+    const m = now.getMonth() + 1 > 9 ? now.getMonth() + 1 : '0' + (now.getMonth() + 1);
     const d = now.getDate() > 9 ?  now.getDate() : '0' + now.getDate();
     const h = now.getHours();
     const availableOfAm = ["10:30:00","11:10:00"];
