@@ -6,14 +6,12 @@ const requestType = /&do=([a-zA-Z_]*)/.exec(url)[1];
 const modiftData = {
     rank: 17,
     // sign_alert: 1,
-    money: "788",
     // is_float: 0,
     // openid: "oEQX35fw6MATmB3YsOVqbLtDm1iM",
     rank_img: "https://xcx.chinafdc.store/attachment/yf_zhaocha_resource/images/rank/rank17.png",
     // nickname: "",
     rank_name_img: "https://xcx.chinafdc.store/attachment/yf_zhaocha_resource/images/rank/rank17_1.png",
     will_title: "恭喜您已经超越99%的玩家",
-    ticket: 999,
     // service_flag: 0,
     // open_sound: 1,
     // first_login: 0,
@@ -23,7 +21,6 @@ const modiftData = {
     // uid: "oEQX35fw6MATmB3YsOVqbLtDm1iM",
     // sign_in: 0,
     // noticeCard: 1,
-    gold: 7209988,
     // value: 1,
     value_name: "超强王者",
     // is_userinfo: 1,
@@ -49,8 +46,11 @@ switch (requestType) {
     case 'start_game':
         if (obj.code == 200) {
             obj.data.question.forEach(item => {
-                if (item.name !== 'layer') {
-                    item.url = 'https://pic4.zhimg.com/80/v2-3eab60b8d4c5fc0892ee5bb8b1e2842f_720w.jpg'
+                // if (item.name !== 'layer') {
+                //     item.url = 'https://pic4.zhimg.com/80/v2-3eab60b8d4c5fc0892ee5bb8b1e2842f_720w.jpg'
+                // }
+                if (item.name == 'layer') {
+                    item.url = '';
                 }
             });
         }
