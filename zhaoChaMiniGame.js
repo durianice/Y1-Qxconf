@@ -45,7 +45,6 @@ switch (requestType) {
         // 关卡
     case 'start_game':
         if (obj.code == 200) {
-            obj.data.status = 2;
             obj.data.question.forEach(item => {
                 if (item.name == 'layer') {
                     item.url = '';
