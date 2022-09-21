@@ -123,9 +123,9 @@ function getRedBag(options) {
       body: isAm ? bodyData_am :  bodyData_pm
     }).then(res => {
       let result = { success: true, msg: "msg" };
-      const { msg, code, subcode } = res.body
-      if ((code == 0 && subcode == 0) || (code == 1 && subcode == 2)) {
-        const { data: { priceLimit, couponValue } } = res.body
+      const { msg, code, subcode, data = null } = res.body
+      if ((code == 0 && subcode == 0) || (code == 1 && subcode == 2) && data) {
+        const { priceLimit, couponValue } = data;
         result.msg = `用户 ${userId} ${msg} ${priceLimit}-${couponValue}`;
       } else {
         result.success = false;
@@ -205,7 +205,7 @@ function getRedBag(options) {
       const userId = session;
       const cookies = $.data.read(sankuaiCookieKey, "", session);
       const justBig = h == 10 || h == 15;
-      if (justBig) {
+      if (true) {
         // 高峰期只抢大的
         const options = { redBagId: redBagIds[0], userId, cookies };
         tasks.push($.utils.retry(getRedBag, 3, 0)(options));
