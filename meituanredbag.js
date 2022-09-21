@@ -7,6 +7,7 @@ const appjsUrl = `https://s3plus.meituan.net/v1/mss_91f3b645703642ce914d9ce3610e
 const sankuaiCookieKey = 'sankuai_cookies';
 const sankuaiSyncQinglongKey = 'sankuai_sync_qinglong';
 let requestCount = 0;
+let isAm = true;
 
 const $ = MagicJS(scriptName, "INFO");
 
@@ -119,7 +120,7 @@ function getRedBag(options) {
         'Accept-Language' : `zh-CN,zh-Hans;q=0.9`,
         Cookie: cookies
       },
-      body: new Date().getHours() > 11 ? bodyData_pm :  bodyData_am
+      body: isAm ? bodyData_am :  bodyData_pm
     }).then(res => {
       let result = { success: true, msg: "msg" };
       const { msg, code, subcode } = res.body
@@ -147,17 +148,36 @@ function getRedBag(options) {
     }
   }
   else {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth() + 1 > 9 ? now.getMonth() + 1 : '0' + now.getMonth() + 1;
+    const d = now.getDate() > 9 ?  now.getDate() : '0' + now.getDate();
+    const h = now.getHours();
+    const availableOfAm = ["10:30:00","11:10:00"];
+    const availableOfPm = ["15:00:00","23:00:00"];
+    const availableAmList = availableOfAm.map(o => new Date(`${y}-${m}-${d} ${o}`).getTime());
+    const availablePmList = availableOfPm.map(o => new Date(`${y}-${m}-${d} ${o}`).getTime());
+    const nowTimeStamp = now.getTime();
+    const validAmTime = nowTimeStamp >= availableAmList[0] && nowTimeStamp <= availableAmList[1];
+    const validPmTime = nowTimeStamp >= availablePmList[0] && nowTimeStamp <= availablePmList[1];
+    if (validAmTime) {
+      isAm = true;
+    } else if (validPmTime) {
+      isAm = false;
+    } else {
+      $.logger.warning(`活动暂未开始，请稍后再试^^`);
+      $.done();
+      return;
+    }
     const redBagColdTime = Number($.data.read('redBagColdTime', ""));
     if (new Date().getTime() - redBagColdTime < 60 * 1000) {
       $.logger.warning(`冷却中，请稍后再试^^`);
       $.done();
       return;
     }
-    const h = new Date().getHours();
-    // const bagKey = h > 10 && h < 15 || h > 16 || h < 8 ? 'bag_22_6' : 'bag_25_12';
-    const subKey = h < 11 ? 'am' : 'pm';
+    const subKey = isAm ? 'am' : 'pm';
     let redBagIds = $.data.read('red_bag_ids', "", subKey)
-    const redBagExpire = new Date().getTime() - Number($.data.read('red_bag_expire_time', "")) > 2 * 24 * 60 * 60 * 1000;
+    const redBagExpire = new Date().getTime() - Number($.data.read('red_bag_expire_time', "")) > 365 * 24 * 60 * 60 * 1000;
     if (!redBagIds.length || redBagExpire) {
       $.logger.info(`请求刷新红包ID`);
       await getRedBagId();
@@ -183,7 +203,6 @@ function getRedBag(options) {
     for (let [index, session] of allSessions.entries()) {
       const userId = session;
       const cookies = $.data.read(sankuaiCookieKey, "", session);
-      // $.logger.info(`当前用户cookie \n ${cookies}`);
       const justBig = h == 10 || h == 15;
       if (justBig) {
         // 高峰期只抢大的
