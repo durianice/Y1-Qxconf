@@ -150,7 +150,7 @@ function getRedBag(options) {
   else {
     const now = new Date();
     const y = now.getFullYear();
-    const m = now.getMonth() + 1;
+    let m = now.getMonth() + 1;
     m = m > 9 ? m : '0' + m;
     const d = now.getDate() > 9 ?  now.getDate() : '0' + now.getDate();
     const h = now.getHours();
