@@ -117,9 +117,6 @@ function gamePass() {
 }
 
 ;(async () => {
-    $.logger.warning($.isRequest);
-    $.logger.warning($request);
-    $.logger.warning($response);
     if ($.isResponse) {
         rewriteBody();
     } else {
