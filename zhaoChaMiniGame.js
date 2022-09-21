@@ -107,8 +107,8 @@ function gamePass() {
                 $.logger.info(msgTips);
             } else {
                 $.logger.warning('错误');
-                resolve('错误')
             }
+            resolve(1);
         }).catch(err => {
             $.logger.warning('错误');
             reject('错误')
@@ -120,7 +120,12 @@ function gamePass() {
     if ($.isResponse) {
         rewriteBody();
     } else {
-        await $.utils.retry(gamePass, 10, 1000, (result) => Promise.reject(result))();
+        try {
+            await $.utils.retry(gamePass, 10, 1000, (result) => Promise.reject(result))();
+        } catch (error) {
+            $.logger.warning(error);
+        }
+        
     }
     $.done();
 })();
