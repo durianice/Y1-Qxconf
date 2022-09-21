@@ -1,3 +1,4 @@
+const $ = MagicJS('大家来找不同小游戏', "INFO");
 function rewriteBody() {
     const url = $request.url;
     const body = $response.body;
@@ -116,7 +117,6 @@ function gamePass() {
 }
 
 ;(async () => {
-    $.logger.warning($.isRequest);
     if ($.isRequest) {
         rewriteBody();
     } else {
