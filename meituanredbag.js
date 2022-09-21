@@ -184,7 +184,7 @@ function getRedBag(options) {
       const userId = session;
       const cookies = $.data.read(sankuaiCookieKey, "", session);
       // $.logger.info(`当前用户cookie \n ${cookies}`);
-      const justBig = h == 10;
+      const justBig = h == 10 || h == 15;
       if (justBig) {
         // 高峰期只抢大的
         const options = { redBagId: redBagIds[0], userId, cookies };
