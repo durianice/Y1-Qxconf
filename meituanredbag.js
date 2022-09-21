@@ -155,12 +155,13 @@ function getRedBag(options) {
     const h = now.getHours();
     const availableOfAm = ["10:30:00","11:10:00"];
     const availableOfPm = ["15:00:00","23:00:00"];
-    const availableAmList = availableOfAm.map(o => new Date(`${y}-${m}-${d} ${o}`).getTime());
-    const availablePmList = availableOfPm.map(o => new Date(`${y}-${m}-${d} ${o}`).getTime());
-    $.logger.info(`活动一时间：${availableAmList} \n 活动二时间：${availablePmList}`);
+    const availableAmList = availableOfAm.map(o => `${y}-${m}-${d} ${o}`);
+    const availablePmList = availableOfPm.map(o => `${y}-${m}-${d} ${o}`);
+    $.logger.info(`活动一时间：${availableAmList.join('~')} \n 活动二时间：${availablePmList.join('~')}`);
     const nowTimeStamp = now.getTime();
-    const validAmTime = nowTimeStamp >= availableAmList[0] && nowTimeStamp <= availableAmList[1];
-    const validPmTime = nowTimeStamp >= availablePmList[0] && nowTimeStamp <= availablePmList[1];
+    const getTimeStamp = (timeStr) => new Date(timeStr).getTime();
+    const validAmTime = nowTimeStamp >= getTimeStamp(availableAmList[0]) && nowTimeStamp <= getTimeStamp(availableAmList[1]);
+    const validPmTime = nowTimeStamp >= getTimeStamp(availablePmList[0]) && nowTimeStamp <= (getTimeStampavailablePmList[1]);
     if (validAmTime) {
       isAm = true;
     } else if (validPmTime) {
