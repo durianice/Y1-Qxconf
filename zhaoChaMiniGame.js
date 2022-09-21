@@ -33,29 +33,42 @@ switch (requestType) {
             Object.assign(obj.data, modiftData);
         }
         break;
-    // 体力
+        // 体力
     case 'residue_time':
         if (obj.code == 200) {
             Object.assign(obj.data, modiftData);
         }
         break;
-    // 排名
+        // 排名
     case 'rank':
         break;
-    // 关卡
+        // 关卡
     case 'start_game':
         if (obj.code == 200) {
+            obj.data.status = 2;
             obj.data.question.forEach(item => {
-                // if (item.name !== 'layer') {
-                //     item.url = 'https://pic4.zhimg.com/80/v2-3eab60b8d4c5fc0892ee5bb8b1e2842f_720w.jpg'
-                // }
                 if (item.name == 'layer') {
                     item.url = '';
+                }
+                if (item.name !== 'layer') {
+                    item.url = 'https://img-bsy.txrpic.com/preview/Element/00/00/76/99/E-769925-B52556C2.png'
                 }
             });
         }
         break;
-
+        // pk
+    case 'start_pkgame':
+        if (obj.code == 200) {
+            obj.data.question.forEach(item => {
+                if (item.name == 'layer') {
+                    item.url = '';
+                }
+                if (item.name !== 'layer') {
+                    item.url = 'https://img-bsy.txrpic.com/preview/Element/00/00/76/99/E-769925-B52556C2.png'
+                }
+            });
+        }
+        break;
     default:
         break;
 }
