@@ -116,7 +116,7 @@ function getRedBag(options) {
         'Content-Type' : `application/json;charset=utf-8`,
         'Host' : `promotion.waimai.meituan.com`,
         'Connection' : `keep-alive`,
-        'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.26(0x18001a34) NetType/2G Language/zh_CN miniProgram/wx2c348cf579062e56`,
+        'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/102.0.5005.67 Mobile/15E148 Safari/604.1`,
         'Referer' : `https://market.waimai.meituan.com/`,
         'Accept-Language' : `zh-CN,zh-Hans;q=0.9`,
         Cookie: cookies
