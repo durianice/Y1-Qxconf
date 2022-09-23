@@ -133,7 +133,7 @@ function getRedBag(options) {
         result.msg = `用户 ${userId} ${msg}`;
       }
       requestCount ++;
-      $.logger.warning(`已完成第${requestCount}次提交，此次提交用时 ${(new Date().getTime() - startTime) / 1000} s`);
+      $.logger.warning(`用户 ${userId} 已完成第${requestCount}次提交，此次提交用时 ${(new Date().getTime() - startTime) / 1000} s`);
       resolve(result);
     }).catch(err => {
       const msg = `用户 ${userId} 领取红包异常 \n ${err}`;
@@ -155,8 +155,8 @@ function getRedBag(options) {
     m = m > 9 ? m : '0' + m;
     const d = now.getDate() > 9 ?  now.getDate() : '0' + now.getDate();
     const h = now.getHours();
-    const availableOfAm = ["10:30:00","11:10:00"];
-    const availableOfPm = ["15:00:00","23:00:00"];
+    const availableOfAm = ["10:29:59","11:10:00"];
+    const availableOfPm = ["14:59:59","23:00:00"];
     const availableAmList = availableOfAm.map(o => new Date(`${y}/${m}/${d} ${o}`).getTime());
     const availablePmList = availableOfPm.map(o => new Date(`${y}/${m}/${d} ${o}`).getTime());
     const nowTimeStamp = now.getTime();
@@ -178,7 +178,7 @@ function getRedBag(options) {
       return;
     }
     const subKey = isAm ? 'am' : 'pm';
-    let redBagIds = $.data.read('red_bag_ids', "", subKey)
+    let redBagIds = $.data.read('red_bag_ids', "", subKey);
     const redBagExpire = new Date().getTime() - Number($.data.read('red_bag_expire_time', "")) > 365 * 24 * 60 * 60 * 1000;
     if (!redBagIds.length || redBagExpire) {
       $.logger.info(`请求刷新红包ID`);
@@ -205,11 +205,10 @@ function getRedBag(options) {
     for (let [index, session] of allSessions.entries()) {
       const userId = session;
       const cookies = $.data.read(sankuaiCookieKey, "", session);
-      const justBig = h == 10 || h == 15;
       if (true) {
         // 高峰期只抢大的
         const options = { redBagId: redBagIds[0], userId, cookies };
-        tasks.push($.utils.retry(getRedBag, 3, 0)(options));
+        tasks.push($.utils.retry(getRedBag, 100, 10, (result) => result.success ? Promise.resolve(result) : Promise.reject(result))(options));
       } else {
         redBagIds.forEach(redBagId => {
           const options = { redBagId, userId, cookies };
