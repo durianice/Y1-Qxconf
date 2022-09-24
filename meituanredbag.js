@@ -28,7 +28,8 @@ async function getCookies() {
     const cookie = $.request.headers.Cookie;
     $.logger.info(`本次运行获取的新Cookies\n${cookie}`);
     const currentUserId = getUserId(cookie);
-    const regStr = /_lxsdk_s=([a-zA-Z0-9\-_%]*)/
+    // const regStr = /_lxsdk_s=([a-zA-Z0-9\-_%]*)/
+    const regStr = /logan_session_token=([a-zA-Z0-9\-_%]*)/
     const compareCookie = !!cookie ? regStr.exec(cookie)[1] : null;
     // 获取存储池中的旧Cookie
     let hisCookie = $.data.read(sankuaiCookieKey, "", currentUserId);
