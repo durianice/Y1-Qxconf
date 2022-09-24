@@ -30,7 +30,8 @@ async function getCookies() {
     const currentUserId = getUserId(cookie);
     // const regStr = /_lxsdk_s=([a-zA-Z0-9\-_%]*)/
     const regStr = /logan_session_token=([a-zA-Z0-9\-_%]*)/
-    const compareCookie = !!cookie ? regStr.exec(cookie)[1] : null;
+    const getCookiePartByCookie = (target) => regStr.exec(target) ? regStr.exec(target)[1] : '没有获取到对应的cookie值';
+    const compareCookie = !!cookie ? getCookiePartByCookie(cookie) : null;
     // 获取存储池中的旧Cookie
     let hisCookie = $.data.read(sankuaiCookieKey, "", currentUserId);
     $.logger.info(`存储池中旧的Cookies\n${hisCookie}`);
@@ -41,7 +42,7 @@ async function getCookies() {
         $.notification.post(`用户 ${currentUserId} Cookie获取成功！`);
       }
       else {
-        const compareHisCookie = !!hisCookie ? regStr.exec(hisCookie)[1] : null;
+        const compareHisCookie = !!hisCookie ? getCookiePartByCookie(hisCookie) : null;
         $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
         if (compareCookie !== compareHisCookie) {
           $.data.write(sankuaiCookieKey, cookie, currentUserId);
@@ -57,7 +58,7 @@ async function getCookies() {
           $.notification.post("Cookie同步至青龙面板成功！");
         }
         else {
-          const compareHisCookie = !!hisCookie ? regStr.exec(hisCookie)[1] : null;
+          const compareHisCookie = !!hisCookie ? getCookiePartByCookie(hisCookie) : null;
           $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
           if (compareCookie !== compareHisCookie) {
             await $.qinglong.write(sankuaiCookieKey, cookie, currentUserId);
@@ -72,7 +73,6 @@ async function getCookies() {
   }
   catch (err) {
     $.logger.error(`获取Cookies出现异常\n${err}`);
-    $.data.del(sankuaiCookieKey, currentUserId, "");
   }
 }
 
