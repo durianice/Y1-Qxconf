@@ -1,8 +1,8 @@
 
 const pageUrl = `https://market.waimai.meituan.com/gd/single.html?el_biz=waimai&el_page=gundam.loader&activity_id=220542&tenant=gundam&gundam_id=3axN8G`;
 const scriptName = '美团外卖红包';
-// const getCookiesRegex = /^https?:\/\/market\.waimai\.meituan\.com\/gd\/single\.html.*/;
-const getCookiesRegex = /^https:\/\/promotion\.waimai\.meituan\.com\/lottery\/limitcouponcomponent\/fetchcoupon\?couponReferId=.*/;
+const getCookiesRegex = /^https?:\/\/market\.waimai\.meituan\.com\/gd\/single\.html.*/;
+// const getCookiesRegex = /^https:\/\/promotion\.waimai\.meituan\.com\/lottery\/limitcouponcomponent\/fetchcoupon\?couponReferId=.*/;
 const getAppjsUrl = `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&activity_id=220542&tenant=gundam&gundam_id=3axN8G`;
 const appjsUrl = `https://s3plus.meituan.net/v1/mss_91f3b645703642ce914d9ce3610eaf4c/gundampage/app.1662695184234ab1dc534708743bde6f04219fcad192a.js`
 const sankuaiCookieKey = 'sankuai_cookies';
