@@ -41,7 +41,7 @@ async function getCookies() {
         $.notification.post(`用户 ${currentUserId} Cookie获取成功！`);
       }
       else {
-        const compareHisCookie = !!hisCookie ? regStr.exec(hisCookie)[1] : null;
+        const compareHisCookie = !!hisCookie ? regStr.exec(hisCookie)[1] : null || 'COOKIE关键字匹配失败';
         $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
         if (compareCookie !== compareHisCookie) {
           $.data.write(sankuaiCookieKey, cookie, currentUserId);
@@ -57,7 +57,7 @@ async function getCookies() {
           $.notification.post("Cookie同步至青龙面板成功！");
         }
         else {
-          const compareHisCookie = !!hisCookie ? regStr.exec(hisCookie)[1] : null;
+          const compareHisCookie = !!hisCookie ? regStr.exec(hisCookie)[1] : null || 'COOKIE关键字匹配失败';
           $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
           if (compareCookie !== compareHisCookie) {
             await $.qinglong.write(sankuaiCookieKey, cookie, currentUserId);
