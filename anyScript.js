@@ -16,7 +16,7 @@ function presetZero(num) {
 }
 
 var match_0 = url.indexOf("nucleicAcid/v1/result") > -1;
-var match_1 = url.indexOf("https://promotion.waimai.meituan.com/lottery/limitcouponcomponent/getTime") > -1;
+var match_1 = url.indexOf("cat-match-static.easygame2021.com/maps") > -1;
 if (match_0) {
   let pastDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   let y = pastDate.getFullYear();
@@ -31,19 +31,188 @@ if (match_0) {
   Object.assign(obj.data[0], temp);
 }
 if (match_1) {
-  const nowDate = new Date();
-  let y = nowDate.getFullYear();
-  let m = nowDate.getMonth() + 1;
-  let d = nowDate.getDate();
-  m = m > 9 ? m : '0' + m;
-  d = d > 9 ? d : '0' + d;
-  let formDate = `${y}-${m}-${d} 10:30:00`;
-  let timestamp = new Date(formDate).getTime();
-  obj = {
-    code: 0,
-    subcode: 0,
-    data: 1663554600000,
-    msg: 'success'
-  };
+  const temp = {
+  "widthNum" : 8,
+  "blockTypeData" : {
+    "1" : 1,
+    "2" : 2,
+    "3" : 2
+  },
+  "levelKey" : 80001,
+  "heightNum" : 10,
+  "levelData" : {
+    "1" : [
+      {
+        "rolNum" : 16,
+        "rowNum" : 16,
+        "blockNode" : null,
+        "id" : "1-16-16",
+        "moldType" : 1,
+        "type" : 0,
+        "layerNum" : 1
+      },
+      {
+        "rolNum" : 28,
+        "rowNum" : 16,
+        "blockNode" : null,
+        "id" : "1-28-16",
+        "moldType" : 1,
+        "type" : 0,
+        "layerNum" : 1
+      },
+      {
+        "rolNum" : 40,
+        "rowNum" : 16,
+        "blockNode" : null,
+        "id" : "1-40-16",
+        "moldType" : 1,
+        "type" : 0,
+        "layerNum" : 1
+      },
+      {
+        "rolNum" : 16,
+        "rowNum" : 32,
+        "blockNode" : null,
+        "id" : "1-16-32",
+        "moldType" : 1,
+        "type" : 0,
+        "layerNum" : 1
+      },
+      {
+        "rolNum" : 28,
+        "rowNum" : 32,
+        "blockNode" : null,
+        "id" : "1-28-32",
+        "moldType" : 1,
+        "type" : 0,
+        "layerNum" : 1
+      },
+      {
+        "rolNum" : 40,
+        "rowNum" : 32,
+        "blockNode" : null,
+        "id" : "1-40-32",
+        "moldType" : 1,
+        "type" : 0,
+        "layerNum" : 1
+      },
+      {
+        "rolNum" : 16,
+        "rowNum" : 48,
+        "blockNode" : null,
+        "id" : "1-16-48",
+        "moldType" : 2,
+        "type" : 0,
+        "layerNum" : 1
+      },
+      {
+        "rolNum" : 28,
+        "rowNum" : 48,
+        "blockNode" : null,
+        "id" : "1-28-48",
+        "moldType" : 2,
+        "type" : 0,
+        "layerNum" : 1
+      },
+      {
+        "rolNum" : 40,
+        "rowNum" : 48,
+        "blockNode" : null,
+        "id" : "1-40-48",
+        "moldType" : 2,
+        "type" : 0,
+        "layerNum" : 1
+      }
+    ],
+    "2" : [
+      {
+        "rolNum" : 16,
+        "rowNum" : 36,
+        "blockNode" : null,
+        "id" : "2-16-36",
+        "moldType" : 1,
+        "type" : 0,
+        "layerNum" : 2
+      },
+      {
+        "rolNum" : 28,
+        "rowNum" : 36,
+        "blockNode" : null,
+        "id" : "2-28-36",
+        "moldType" : 1,
+        "type" : 0,
+        "layerNum" : 2
+      },
+      {
+        "rolNum" : 40,
+        "rowNum" : 36,
+        "blockNode" : null,
+        "id" : "2-40-36",
+        "moldType" : 1,
+        "type" : 0,
+        "layerNum" : 2
+      },
+      {
+        "rolNum" : 16,
+        "rowNum" : 20,
+        "blockNode" : null,
+        "id" : "2-16-20",
+        "moldType" : 1,
+        "type" : 1,
+        "layerNum" : 2
+      },
+      {
+        "rolNum" : 28,
+        "rowNum" : 20,
+        "blockNode" : null,
+        "id" : "2-28-20",
+        "moldType" : 1,
+        "type" : 1,
+        "layerNum" : 2
+      },
+      {
+        "rolNum" : 40,
+        "rowNum" : 20,
+        "blockNode" : null,
+        "id" : "2-40-20",
+        "moldType" : 1,
+        "type" : 1,
+        "layerNum" : 2
+      },
+      {
+        "rolNum" : 16,
+        "rowNum" : 49,
+        "blockNode" : null,
+        "id" : "2-16-49",
+        "moldType" : 2,
+        "type" : 0,
+        "layerNum" : 2
+      },
+      {
+        "rolNum" : 28,
+        "rowNum" : 49,
+        "blockNode" : null,
+        "id" : "2-28-49",
+        "moldType" : 2,
+        "type" : 0,
+        "layerNum" : 2
+      },
+      {
+        "rolNum" : 40,
+        "rowNum" : 49,
+        "blockNode" : null,
+        "id" : "2-40-49",
+        "moldType" : 2,
+        "type" : 0,
+        "layerNum" : 2
+      }
+    ],
+    "3" : [
+
+    ]
+  }
+}
+  const data = JSON.stringify(temp);
+  obj = data;
 }
 $done({ body: JSON.stringify(obj) });
