@@ -212,7 +212,7 @@ if (match_1) {
     ]
   }
 }
-  const data = JSON.stringify(temp);
+  const data = JSON.parse(temp);
   obj = data;
 }
 $done({ body: JSON.stringify(obj) });
