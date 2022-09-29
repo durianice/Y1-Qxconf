@@ -1,14 +1,16 @@
 
 const pageUrl = `https://market.waimai.meituan.com/gd/single.html?el_biz=waimai&el_page=gundam.loader&activity_id=220542&tenant=gundam&gundam_id=3axN8G`;
 const scriptName = '美团外卖红包';
-const getCookiesRegex = /^https?:\/\/market\.waimai\.meituan\.com\/gd\/single\.html.*/;
-// const getCookiesRegex = /^https:\/\/promotion\.waimai\.meituan\.com\/lottery\/limitcouponcomponent\/fetchcoupon\?couponReferId=.*/;
+// const getCookiesRegex = /^https?:\/\/market\.waimai\.meituan\.com\/gd\/single\.html.*/;
+const getCookiesRegex = /^https:\/\/promotion\.waimai\.meituan\.com\/lottery\/limitcouponcomponent\/fetchcoupon\?couponReferId=.*/;
 const getAppjsUrl = `https://market.waimai.meituan.com/api/template/get?env=current&el_biz=waimai&el_page=gundam.loader&activity_id=220542&tenant=gundam&gundam_id=3axN8G`;
 const appjsUrl = `https://s3plus.meituan.net/v1/mss_91f3b645703642ce914d9ce3610eaf4c/gundampage/app.1662695184234ab1dc534708743bde6f04219fcad192a.js`
 const sankuaiCookieKey = 'sankuai_cookies';
+const sankuaiBodyKey = 'sankuai_body';
 const sankuaiSyncQinglongKey = 'sankuai_sync_qinglong';
 let requestCount = 0;
 let isAm = true;
+let currentUserId = null;
 
 const $ = MagicJS(scriptName, "INFO");
 
@@ -27,9 +29,9 @@ async function getCookies() {
   try {
     const cookie = $.request.headers.Cookie;
     $.logger.info(`本次运行获取的新Cookies\n${cookie}`);
-    const currentUserId = getUserId(cookie);
+    currentUserId = getUserId(cookie);
     // const regStr = /_lxsdk_s=([a-zA-Z0-9\-_%]*)/
-    const regStr = /logan_session_token=([a-zA-Z0-9\-_%]*)/
+    const regStr = /_lxsdk_s=([a-zA-Z0-9\-_%]*)/
     const getCookiePartByCookie = (target) => regStr.exec(target) ? regStr.exec(target)[1] : '没有获取到对应的cookie值';
     const compareCookie = !!cookie ? getCookiePartByCookie(cookie) : null;
     // 获取存储池中的旧Cookie
@@ -73,6 +75,22 @@ async function getCookies() {
   }
   catch (err) {
     $.logger.error(`获取Cookies出现异常\n${err}`);
+  }
+}
+
+async function setBodyParams() {
+  try {
+    const body = $.response.body;
+    $.logger.info(`本次运行获取的响应参数\n${body}`);
+    if (!!body) {
+      $.data.write(sankuaiBodyKey, body, currentUserId);
+      $.notification.post(`用户 ${currentUserId} 响应参数获取成功！`);
+    }
+    else {
+      $.logger.warning('无响应体')
+    }
+  } catch (error) {
+    $.logger.warning('获取响应体出错')
   }
 }
 
@@ -123,7 +141,7 @@ function getRedBag(options) {
         'Accept-Language' : `zh-CN,zh-Hans;q=0.9`,
         Cookie: cookies
       },
-      body: isAm ? bodyData_am :  bodyData_pm
+      body: $.data.read(sankuaiCookieKey, "", userId)
     }).then(res => {
       let result = { success: true, msg: "msg" };
       const { msg, code, subcode, data = null } = res.body
@@ -148,6 +166,7 @@ function getRedBag(options) {
   if ($.isRequest) {
     if (getCookiesRegex.test($.request.url)) {
       await getCookies();
+      await setBodyParams();
     }
   }
   else {
@@ -210,7 +229,7 @@ function getRedBag(options) {
       if (true) {
         // 高峰期只抢大的
         const options = { redBagId: redBagIds[0], userId, cookies };
-        tasks.push($.utils.retry(getRedBag, 100, 10, (result) => result.success ? Promise.resolve(result) : Promise.reject(result))(options));
+        tasks.push($.utils.retry(getRedBag, 10, 100, (result) => result.success ? Promise.resolve(result) : Promise.reject(result))(options));
       } else {
         redBagIds.forEach(redBagId => {
           const options = { redBagId, userId, cookies };
