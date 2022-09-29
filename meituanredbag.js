@@ -90,7 +90,7 @@ async function setBodyParams() {
       $.logger.warning('无响应体')
     }
   } catch (error) {
-    $.logger.warning('获取响应体出错')
+    $.logger.warning(`获取响应体出错 \n ${error}`)
   }
 }
 
