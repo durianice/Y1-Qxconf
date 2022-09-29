@@ -78,16 +78,16 @@ async function getCookies() {
 async function setBodyParams() {
   try {
     const body = $.request.body;
-    $.logger.info(`本次运行获取的响应参数\n${body}`);
+    $.logger.info(`本次运行获取的请求参数\n${body}`);
     if (!!body) {
       $.data.write(`${sankuaiBodyKey}_${timeType}`, body, currentUserId);
-      $.notification.post(`用户 ${currentUserId} 响应参数获取成功！`);
+      $.notification.post(`用户 ${currentUserId} 请求参数获取成功！`);
     }
     else {
-      $.logger.warning('无响应体')
+      $.logger.warning('无请求体')
     }
   } catch (error) {
-    $.logger.warning(`获取响应体出错 \n ${error}`)
+    $.logger.warning(`获取请求体出错 \n ${error}`)
   }
 }
 
