@@ -44,11 +44,8 @@ async function getCookies() {
         const compareHisCookie = !!hisCookie ? getCookiePartByCookie(hisCookie) : null;
         $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
         if (compareCookie !== compareHisCookie) {
-          const temp = compareCookie && compareCookie.split('%7C');
-          const newStr = `${temp[0]}%7C${temp[1]}%7C${(Number(temp[2]) + 2)}`;
-          const writeCookie = cookie.replace(compareCookie, newStr);
-          $.data.write(sankuaiCookieKey, writeCookie, currentUserId);
-          $.logger.info(`更新后的Cookie \n ${writeCookie}`);
+          $.data.write(sankuaiCookieKey, cookie, currentUserId);
+          $.logger.info(`更新后的Cookie \n ${cookie}`);
           $.notification.post(`用户 ${currentUserId} Cookie更新成功！`);
         }
       }
@@ -125,6 +122,9 @@ function getRedBagId() {
 // 领取红包
 function getRedBag(options) {
   const { redBagId, userId, cookies } = options;
+  const temp = cookies && cookies.split('%7C');
+  const newStr = `${temp[0]}%7C${temp[1]}%7C${(Number(temp[2]) + 2)}`;
+  const newCookie = cookies.replace(cookies, newStr);
   const startTime = new Date().getTime();
   return new Promise((resolve, reject) => {
     $.http.post({
@@ -139,7 +139,7 @@ function getRedBag(options) {
         'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/102.0.5005.67 Mobile/15E148 Safari/604.1`,
         'Referer' : `https://market.waimai.meituan.com/`,
         'Accept-Language' : `zh-CN,zh-Hans;q=0.9`,
-        Cookie: cookies
+        Cookie: newCookie
       },
       body: $.data.read(`${sankuaiBodyKey}_${timeType}`, "", userId)
     }).then(res => {
@@ -187,7 +187,8 @@ function judgeTime() {
   judgeTime();
   if ($.isRequest) {
     if (getCookiesRegex.test($.request.url)) {
-      $.request.body ? await setBodyParams() : await getCookies();
+      await getCookies();
+      await setBodyParams();
     }
   }
   else {
