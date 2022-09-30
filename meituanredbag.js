@@ -121,11 +121,14 @@ function getRedBagId() {
 
 // 领取红包
 function getRedBag(options) {
-  const { redBagId, userId, cookies } = options;
+  const { redBagId, userId } = options;
+  // 更新字段
+  let cookies = $.data.read(sankuaiCookieKey, "", userId);
   const _lxsdk_s = !!cookies ? getCookiePartByCookie(cookies) : null;
   const temp = _lxsdk_s && _lxsdk_s.split('%7C');
   const new_lxsdk_s = `${temp[0]}%7C${temp[1]}%7C${(Number(temp[2]) + 2)}`;
   const newCookie = cookies.replace(_lxsdk_s, new_lxsdk_s);
+  $.data.write(sankuaiCookieKey, newCookie, userId);
   const startTime = new Date().getTime();
   return new Promise((resolve, reject) => {
     $.http.post({
@@ -154,7 +157,7 @@ function getRedBag(options) {
         result.msg = `用户 ${userId} ${msg}`;
       }
       requestCount ++;
-      $.logger.warning(`用户 ${userId} 已完成第${requestCount}次提交，此次提交用时 ${(new Date().getTime() - startTime) / 1000} s`);
+      $.logger.warning(`用户 ${userId} 标识更新 ${new_lxsdk_s} \n 已完成第${requestCount}次提交，此次提交用时 ${(new Date().getTime() - startTime) / 1000} s`);
       resolve(result);
     }).catch(err => {
       const msg = `用户 ${userId} 领取红包异常 \n ${err}`;
