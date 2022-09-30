@@ -11,6 +11,9 @@ const sankuaiSyncQinglongKey = 'sankuai_sync_qinglong';
 let requestCount = 0;
 let timeType = null;
 let currentUserId = null;
+// const regStr = /_lxsdk_s=([a-zA-Z0-9\-_%]*)/
+const regStr = /_lxsdk_s=([a-zA-Z0-9\-_%]*)/
+const getCookiePartByCookie = (target) => regStr.exec(target) ? regStr.exec(target)[1] : '没有匹配到对应的值';
 
 const $ = MagicJS(scriptName, "INFO");
 
@@ -27,9 +30,6 @@ async function getCookies() {
     const cookie = $.request.headers.Cookie;
     $.logger.info(`本次运行获取的新Cookies\n${cookie}`);
     currentUserId = getUserId(cookie);
-    // const regStr = /_lxsdk_s=([a-zA-Z0-9\-_%]*)/
-    const regStr = /_lxsdk_s=([a-zA-Z0-9\-_%]*)/
-    const getCookiePartByCookie = (target) => regStr.exec(target) ? regStr.exec(target)[1] : '没有获取到对应的cookie值';
     const compareCookie = !!cookie ? getCookiePartByCookie(cookie) : null;
     // 获取存储池中的旧Cookie
     let hisCookie = $.data.read(sankuaiCookieKey, "", currentUserId);
@@ -44,8 +44,11 @@ async function getCookies() {
         const compareHisCookie = !!hisCookie ? getCookiePartByCookie(hisCookie) : null;
         $.logger.info(`用于比较Cookie变化\n新:${compareCookie}\n旧:${compareHisCookie}`);
         if (compareCookie !== compareHisCookie) {
-          $.data.write(sankuaiCookieKey, cookie, currentUserId);
-          $.logger.info(`更新后的Cookie \n ${cookie}`);
+          const temp = compareCookie && compareCookie.split('%7C');
+          const newStr = `${temp[0]}%7C${temp[1]}%7C${(Number(temp[2]) + 2)}`;
+          const writeCookie = cookie.replace(compareCookie, newStr);
+          $.data.write(sankuaiCookieKey, writeCookie, currentUserId);
+          $.logger.info(`更新后的Cookie \n ${writeCookie}`);
           $.notification.post(`用户 ${currentUserId} Cookie更新成功！`);
         }
       }
@@ -184,8 +187,7 @@ function judgeTime() {
   judgeTime();
   if ($.isRequest) {
     if (getCookiesRegex.test($.request.url)) {
-      await getCookies();
-      await setBodyParams();
+      $.request.body ? await setBodyParams() : await getCookies();
     }
   }
   else {
