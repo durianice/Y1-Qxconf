@@ -77,7 +77,7 @@ async function getCookies() {
 
 async function setBodyParams() {
   try {
-    $.logger.info(`本次运行获取的请求参数\n${$.request}`);
+    $.logger.info(`本次运行获取的请求参数\n${JSON.stringify($.request)}`);
     const body = $.request.body;
     if (!!body) {
       $.data.write(`${sankuaiBodyKey}_${timeType}`, body, currentUserId);
