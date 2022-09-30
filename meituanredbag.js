@@ -122,9 +122,10 @@ function getRedBagId() {
 // 领取红包
 function getRedBag(options) {
   const { redBagId, userId, cookies } = options;
-  const temp = cookies && cookies.split('%7C');
-  const newStr = `${temp[0]}%7C${temp[1]}%7C${(Number(temp[2]) + 2)}`;
-  const newCookie = cookies.replace(cookies, newStr);
+  const _lxsdk_s = !!cookies ? getCookiePartByCookie(cookies) : null;
+  const temp = _lxsdk_s && _lxsdk_s.split('%7C');
+  const new_lxsdk_s = `${temp[0]}%7C${temp[1]}%7C${(Number(temp[2]) + 2)}`;
+  const newCookie = cookies.replace(_lxsdk_s, new_lxsdk_s);
   const startTime = new Date().getTime();
   return new Promise((resolve, reject) => {
     $.http.post({
