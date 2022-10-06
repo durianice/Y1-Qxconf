@@ -46,7 +46,10 @@ if (match_2) {
     sampleTime: a,
     nucleateCheckDate: b
   };
-  Object.assign(obj.data[0], temp);
+  let last = obj.data[0];
+  Object.assign(last, temp);
+  obj.data.unshift(last);
+  // Object.assign(obj.data[0], temp);
 };
 if (match_1) {
   const temp = {
