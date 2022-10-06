@@ -9,7 +9,7 @@ var url = $request.url;
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return presetZero(Math.floor(Math.random() * (max - min + 1)) + min);
 }
 function presetZero(num) {
   return num > 9 ? num : '0' + num;
@@ -20,13 +20,14 @@ function getTestTime() {
   let y = pastDate.getFullYear();
   let m = pastDate.getMonth() + 1;
   let d = pastDate.getDate();
+  d = presetZero(d);
+  m = presetZero(m);
   let yesterday = `${y}-${m}-${d}`;
   let startHms = `${getRandomIntInclusive(9, 12)}:${getRandomIntInclusive(0, 60)}:${getRandomIntInclusive(0, 60)}`;
   let endHms = `${getRandomIntInclusive(18, 23)}:${getRandomIntInclusive(0, 60)}:${getRandomIntInclusive(0, 60)}`;
-  let sampling_date = `${yesterday} ${startHms}`;
-  let testing_date = `${yesterday} ${endHms}`;
-  let temp = { a: sampling_date, b: testing_date };
-  return temp;
+  let startDate = `${yesterday} ${startHms}`;
+  let endDate = `${yesterday} ${endHms}`;
+  return { a: startDate, b: endDate };
 };
 
 var match_0 = url.indexOf("nucleicAcid/v1/result") > -1;
@@ -35,8 +36,8 @@ var match_2 = url.indexOf("nuclein/listNucleate") || url.indexOf("nuclein/listNu
 if (match_0) {
   let { a, b } = getTestTime();
   let temp = {
-    sampling_date : a,
-    testing_date : b
+    sampling_date: a,
+    testing_date: b
   };
   Object.assign(obj.data[0], temp);
 };
