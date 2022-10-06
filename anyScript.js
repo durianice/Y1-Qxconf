@@ -46,7 +46,7 @@ if (match_2) {
     sampleTime: a,
     nucleateCheckDate: b
   };
-  let last = obj.data[0];
+  let last = JSON.parse(JSON.stringify(obj.data[0]));
   Object.assign(last, temp);
   obj.data.unshift(last);
   // Object.assign(obj.data[0], temp);
