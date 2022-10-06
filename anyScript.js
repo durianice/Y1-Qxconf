@@ -6,7 +6,7 @@
 
 var obj = JSON.parse($response.body);
 var url = $request.url;
-const $ = MagicJS(scriptName, "INFO");
+const $ = MagicJS("anyScript", "INFO");
 
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
