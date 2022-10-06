@@ -34,7 +34,6 @@ function getTestTime() {
 function getTime() {
   const exp_t = util.getdata("test_exp_t") || 0;
   util.log(`过期时间 \n ${exp_t}`);
-  util.log(util.getdata("test_time"));
   util.log(`是否过期 \n ${new Date().getTime() - Number(exp_t) > 24 * 60 * 60 * 1000}`);
   let result = null;
   if (new Date().getTime() - Number(exp_t) > 24 * 60 * 60 * 1000) {
@@ -42,6 +41,8 @@ function getTime() {
     util.setdata("test_time", t);
     util.setdata("test_exp_t", new Date().getTime());
     result = t;
+    util.log(util.getdata("test_time"));
+    util.log(util.getdata("test_exp_t"));
   } else {
     result = util.getdata("test_time");
   };
