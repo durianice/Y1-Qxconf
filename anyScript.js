@@ -41,7 +41,7 @@ function getTime() {
     util.setdata("test_time", t);
     util.setdata("test_exp_t", new Date().getTime());
     result = t;
-    $prefs.setValueForKey(t,"aaa");
+    $prefs.setValueForKey(666666,"aaa");
     util.log($prefs.valueForKey("aaa"));
     util.log(util.getdata("test_time"));
     util.log(util.getdata("test_exp_t"));
