@@ -6,7 +6,7 @@
 
 var obj = JSON.parse($response.body);
 var url = $request.url;
-let util = int();
+let util = init();
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
