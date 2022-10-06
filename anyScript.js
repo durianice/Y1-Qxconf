@@ -9,7 +9,7 @@ var url = $request.url;
 let util = init();
 
  $prefs.setValueForKey(666666,"aaa");
- console.log($prefs.valueForKey("aaa"));
+ setTimeout(() => console.log($prefs.valueForKey("aaa")), 3000);
 
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
