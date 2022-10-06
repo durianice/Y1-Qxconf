@@ -15,9 +15,7 @@ function presetZero(num) {
   return num > 9 ? num : '0' + num;
 }
 
-var match_0 = url.indexOf("nucleicAcid/v1/result") > -1;
-var match_1 = url.indexOf("cat-match-static.easygame2021.com/maps") > -1;
-if (match_0) {
+function getTestTime() {
   let pastDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   let y = pastDate.getFullYear();
   let m = pastDate.getMonth() + 1;
@@ -27,9 +25,29 @@ if (match_0) {
   let endHms = `${getRandomIntInclusive(18, 23)}:${getRandomIntInclusive(0, 60)}:${getRandomIntInclusive(0, 60)}`;
   let sampling_date = `${yesterday} ${startHms}`;
   let testing_date = `${yesterday} ${endHms}`;
-  let temp = { sampling_date, testing_date };
+  let temp = { a: sampling_date, b: testing_date };
+  return temp;
+};
+
+var match_0 = url.indexOf("nucleicAcid/v1/result") > -1;
+var match_1 = url.indexOf("cat-match-static.easygame2021.com/maps") > -1;
+var match_2 = url.indexOf("nuclein/listNucleate") || url.indexOf("nuclein/listNucleateLast");
+if (match_0) {
+  let { a, b } = getTestTime();
+  let temp = {
+    sampling_date : a,
+    testing_date : b
+  };
   Object.assign(obj.data[0], temp);
-}
+};
+if (match_2) {
+  let { a, b } = getTestTime();
+  let temp = {
+    sampleTime: a,
+    nucleateCheckDate: b
+  };
+  Object.assign(obj.data[0], temp);
+};
 if (match_1) {
   const temp = {
   "widthNum" : 8,
@@ -211,6 +229,7 @@ if (match_1) {
 
     ]
   }
+  
 }
   const data = JSON.parse(temp);
   obj = data;
