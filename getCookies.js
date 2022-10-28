@@ -6,8 +6,8 @@ try {
   let cookie = $.request.headers.Cookie;
   $.notification.post('taobao_cookie', '', cookie);
 }
-catch {
-  $.notification.post('taobao_cookie', '获取异常', '');
+catch (error) {
+  $.notification.post('taobao_cookie', '获取异常', error);
 }
 
 
