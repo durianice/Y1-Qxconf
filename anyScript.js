@@ -74,6 +74,8 @@ if (match_1) {
   // Object.assign(obj.data[0], temp);
 };
 if (match_2) {
+  console.log('获取淘宝cookie..');
+  console.log($.request.headers);
   try {
     let cookie = $.request.headers.Cookie;
     $.notification.post('taobao_cookie', '', cookie);
