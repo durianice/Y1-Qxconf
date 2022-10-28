@@ -1,26 +1,23 @@
+// const cookieName = '获取COOKIE'
+// const chavy = init()
 
+// const requrl = $request.url
+// const reqRef = $request.headers.Referer
 
+// chavy.log($request)
+// chavy.log(JSON.stringify($request))
 
+// console.log('获取淘宝cookie..');
+// try {
+//   let cookie = $request.headers.Cookie;
+//   title = chavy.msg(cookieName, `成功`, cookie)
+// }
+// catch (error) {
+//   title = chavy.msg(cookieName, `异常`, error)
+// }
 
-const cookieName = '获取COOKIE'
-const chavy = init()
-
-const requrl = $request.url
-const reqRef = $request.headers.Referer
-
-chavy.log($request)
-chavy.log(JSON.stringify($request))
-
-console.log('获取淘宝cookie..');
-try {
-  let cookie = $request.headers.Cookie;
-  title = chavy.msg(cookieName, `成功`, cookie)
-}
-catch (error) {
-  title = chavy.msg(cookieName, `异常`, error)
-}
-
-/ ************************ /
+console.log($request)
+console.log(666)
 
 function init() {
   isSurge = () => {
