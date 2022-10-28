@@ -7,17 +7,13 @@ const reqRef = $request.headers.Referer
 chavy.log($request)
 chavy.log(JSON.stringify($request))
 
-// console.log('获取淘宝cookie..');
-// try {
-//   let cookie = $request.headers.Cookie;
-//   title = chavy.msg(cookieName, `成功`, cookie)
-// }
-// catch (error) {
-//   title = chavy.msg(cookieName, `异常`, error)
-// }
+const cookie = $request.headers.Cookie;
+if (cookie.includes('_m_h5_tk')) {
+  title = chavy.msg(cookieName, `成功`, cookie);
+} else {
+  title = chavy.msg(cookieName, `失败`, '');
+}
 
-console.log($request)
-console.log(666)
 
 function init() {
   isSurge = () => {
