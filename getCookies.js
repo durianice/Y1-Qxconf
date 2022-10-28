@@ -1,11 +1,11 @@
-// const cookieName = '获取COOKIE'
-// const chavy = init()
+const cookieName = '获取COOKIE'
+const chavy = init()
 
-// const requrl = $request.url
-// const reqRef = $request.headers.Referer
+const requrl = $request.url
+const reqRef = $request.headers.Referer
 
-// chavy.log($request)
-// chavy.log(JSON.stringify($request))
+chavy.log($request)
+chavy.log(JSON.stringify($request))
 
 // console.log('获取淘宝cookie..');
 // try {
