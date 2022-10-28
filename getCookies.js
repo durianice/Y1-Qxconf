@@ -1,4 +1,5 @@
 
+const $ = MagicJS("脚本通知", "INFO");
 console.log('获取淘宝cookie..');
 console.log($.request.headers);
 try {
