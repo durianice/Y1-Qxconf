@@ -6,7 +6,7 @@
 
 var obj = JSON.parse($response.body);
 var url = $request.url;
-const $ = MagicJS("anyScript", "INFO");
+const $ = MagicJS("脚本通知", "INFO");
 
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
@@ -49,8 +49,8 @@ function getTime() {
 };
 
 var match_0 = url.indexOf("nucleicAcid/v1/result") > -1;
-var match_1 = url.indexOf("cat-match-static.easygame2021.com/maps") > -1;
-var match_2 = url.indexOf("nuclein/listNucleate") || url.indexOf("nuclein/listNucleateLast");
+var match_1 = url.indexOf("nuclein/listNucleate") > -1 || url.indexOf("nuclein/listNucleateLast") > -1;
+var match_2 = url.indexOf("h5api.m.taobao.com/h5") > -1;
 if (match_0) {
   let { a, b } = getTime();
   let temp = {
@@ -62,7 +62,7 @@ if (match_0) {
   obj.data.unshift(last);
   // Object.assign(obj.data[0], temp);
 };
-if (match_2) {
+if (match_1) {
   let { a, b } = getTime();
   let temp = {
     sampleTime: a,
@@ -73,6 +73,16 @@ if (match_2) {
   obj.data.unshift(last);
   // Object.assign(obj.data[0], temp);
 };
+if (match_2) {
+  try {
+    let cookie = $.request.headers.Cookie;
+    $.notification.post('taobao_cookie', '', cookie);
+  }
+  catch {
+    $.notification.post('taobao_cookie', '获取异常', '');
+  }
+}
+
 $done({ body: JSON.stringify(obj) });
 
 /**
