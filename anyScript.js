@@ -40,7 +40,7 @@ function getTime() {
   if (new Date().getTime() - Number(exp_t) > 24 * 60 * 60 * 1000) {
     const t = getTestTime();
     $.data.write("test_time", t);
-    $.data.write("test_exp_t", new Date().getTime());
+    $.data.write("test_exp_t", new Date(t.b).getTime());
     result = t;
   } else {
     result = $.data.read("test_time", "");
